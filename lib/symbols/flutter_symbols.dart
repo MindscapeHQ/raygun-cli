@@ -62,7 +62,7 @@ Future<bool> _run({
   }
 
   if (command.command?.name == 'delete') {
-    if(!command.wasParsed('id')) {
+    if (!command.wasParsed('id')) {
       print('Missing mandatory arguments');
       print(buildParserSymbols().usage);
       return false;
