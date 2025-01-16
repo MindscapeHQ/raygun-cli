@@ -40,6 +40,12 @@ jobs:
       - name: Build Linux binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli
 
+      - name: Upload Linux binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-binary
+          path: raygun-cli
+
   build-macos:
     runs-on: macos-latest
     steps:
@@ -53,6 +59,12 @@ jobs:
       - name: Build MacOS binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli
 
+      - name: Upload MacOS binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-binary
+          path: raygun-cli
+
   build-windows:
     runs-on: windows-latest
     steps:
@@ -63,5 +75,11 @@ jobs:
       - name: Install dependencies
         run: dart pub get
 
-      - name: Build MacOS binary
+      - name: Build Windows binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli.exe
+
+      - name: Upload Windows binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binary
+          path: raygun-cli.exe
