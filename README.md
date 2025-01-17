@@ -43,10 +43,22 @@ Or use directly from sources:
 dart bin/raygun_cli.dart <command> <arguments>
 ```
 
-**Common mandatory arguments**
+#### Configuration parameters
 
-- `app-id` the Application ID in Raygun.com.
-- `token` is an access token from https://app.raygun.com/user/tokens.
+All `raygun-cli` commands share the same configuration parameters.
+
+- App ID: The Application ID in Raygun.com.
+- Token: An access token from https://app.raygun.com/user/tokens.
+
+You can pass these parameters via arguments, e.g. `--app-id=<id>`
+or you can set them as environment variables.
+
+Parameters passed as arguments have priority over environment variables.
+
+| Parameter | Argument | Environment Variable |
+|-----------|----------|----------------------|
+| App ID    | `app-id` | `RAYGUN_APP_ID`      |
+| Token     | `token`  | `RAYGUN_TOKEN`       |
 
 #### Sourcemap Uploader
 
