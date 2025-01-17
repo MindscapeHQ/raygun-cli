@@ -2,7 +2,7 @@ import 'package:args/args.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_command.dart';
 import 'package:raygun_cli/symbols/flutter_symbols.dart';
 
-const String version = '0.0.1';
+const String version = '0.0.2';
 
 ArgParser buildParser() {
   return ArgParser()
@@ -35,6 +35,7 @@ ArgParser buildParser() {
 
 void printUsage(ArgParser argParser) {
   print('Usage: raygun-cli <command> <arguments>');
+  print(argParser.usage);
   print('Commands:');
   for (final command in argParser.commands.keys) {
     print('  $command');
