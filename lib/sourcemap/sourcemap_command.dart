@@ -5,6 +5,8 @@ import 'package:raygun_cli/sourcemap/flutter/sourcemap_flutter.dart';
 import 'package:raygun_cli/sourcemap/node/sourcemap_node.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_single_file.dart';
 
+import '../config_props.dart';
+
 const kSourcemapCommand = 'sourcemap';
 
 ArgParser buildParserSourcemap() {
@@ -15,15 +17,19 @@ ArgParser buildParserSourcemap() {
       negatable: false,
       help: 'Print sourcemap usage information.',
     )
+    ..addFlag(
+      'verbose',
+      abbr: 'v',
+      negatable: false,
+      help: 'Show additional command output.',
+    )
     ..addOption(
       'app-id',
       help: 'Raygun\'s application ID',
-      mandatory: true,
     )
     ..addOption(
       'token',
       help: 'Raygun\'s access token',
-      mandatory: true,
     )
     ..addOption(
       'platform',
@@ -56,18 +62,27 @@ void parseSourcemapCommand(ArgResults command, bool verbose) {
     print(buildParserSourcemap().usage);
     exit(0);
   }
-  if (!command.wasParsed('app-id') || !command.wasParsed('token')) {
-    print('Missing mandatory arguments');
-    print(buildParserSourcemap().usage);
-    exit(2);
-  }
+  final configProps = ConfigProps.load(command);
+
   switch (command.option('platform')) {
     case null:
-      SourcemapSingleFile(command: command, verbose: verbose).upload();
+      SourcemapSingleFile(
+        command: command,
+        verbose: verbose,
+        config: configProps,
+      ).upload();
     case 'flutter':
-      SourcemapFlutter(command: command, verbose: verbose).upload();
+      SourcemapFlutter(
+        command: command,
+        verbose: verbose,
+        config: configProps,
+      ).upload();
     case 'node':
-      SourcemapNode(command: command, verbose: verbose).upload();
+      SourcemapNode(
+        command: command,
+        verbose: verbose,
+        config: configProps,
+      ).upload();
     default:
       print('Unsupported platform');
       exit(1);

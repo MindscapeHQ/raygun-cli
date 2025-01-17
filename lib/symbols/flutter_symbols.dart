@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:raygun_cli/config_props.dart';
 import 'package:raygun_cli/symbols/flutter_symbols_api.dart';
 
 const kSymbolsCommand = 'symbols';
@@ -12,15 +13,11 @@ void parseSymbolsCommand(ArgResults command, bool verbose) {
     print(buildParserSymbols().usage);
     exit(0);
   }
-  if (!command.wasParsed('app-id') || !command.wasParsed('token')) {
-    print('Missing mandatory arguments');
-    print(buildParserSymbols().usage);
-    exit(2);
-  }
+  final configProps = ConfigProps.load(command);
   _run(
     command: command,
-    appId: command['app-id'],
-    token: command['token'],
+    appId: configProps.appId,
+    token: configProps.token,
   ).then((result) {
     if (result) {
       exit(0);
@@ -85,15 +82,19 @@ ArgParser buildParserSymbols() {
       negatable: false,
       help: 'Print $kSymbolsCommand usage information.',
     )
+    ..addFlag(
+      'verbose',
+      abbr: 'v',
+      negatable: false,
+      help: 'Show additional command output.',
+    )
     ..addOption(
       'app-id',
       help: 'Raygun\'s application ID',
-      mandatory: true,
     )
     ..addOption(
       'token',
       help: 'Raygun\'s access token',
-      mandatory: true,
     )
     ..addOption(
       'path',
