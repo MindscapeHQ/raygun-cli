@@ -34,12 +34,16 @@ ArgParser buildParser() {
 }
 
 void printUsage(ArgParser argParser) {
+  print('Raygun CLI: $version');
+  print('');
   print('Usage: raygun-cli <command> <arguments>');
   print(argParser.usage);
+  print('');
   print('Commands:');
   for (final command in argParser.commands.keys) {
     print('  $command');
   }
+  print('');
 }
 
 void main(List<String> arguments) {
