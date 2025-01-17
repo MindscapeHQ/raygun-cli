@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:args/args.dart';
 import 'package:raygun_cli/config_props.dart';
 import 'package:raygun_cli/environment.dart';
