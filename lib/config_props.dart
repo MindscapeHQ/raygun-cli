@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:raygun_cli/environment.dart';
 
 /// Configuration properties for the Raygun CLI
 class ConfigProps {
@@ -25,7 +26,7 @@ class ConfigProps {
     if (arguments.wasParsed('app-id')) {
       appId = arguments['app-id'];
     } else {
-      appId = Platform.environment['RAYGUN_APP_ID'];
+      appId = Environment.instance.raygunAppId;
     }
 
     if (appId == null) {
@@ -38,7 +39,7 @@ class ConfigProps {
     if (arguments.wasParsed('token')) {
       token = arguments['token'];
     } else {
-      token = Platform.environment['RAYGUN_TOKEN'];
+      token = Environment.instance.raygunToken;
     }
 
     if (token == null) {
