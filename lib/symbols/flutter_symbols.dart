@@ -13,7 +13,7 @@ void parseSymbolsCommand(ArgResults command, bool verbose) {
     print(buildParserSymbols().usage);
     exit(0);
   }
-  final configProps = ConfigProps.load(command);
+  final configProps = ConfigProps.load(command, verbose: verbose);
   _run(
     command: command,
     appId: configProps.appId,
@@ -81,12 +81,6 @@ ArgParser buildParserSymbols() {
       abbr: 'h',
       negatable: false,
       help: 'Print $kSymbolsCommand usage information.',
-    )
-    ..addFlag(
-      'verbose',
-      abbr: 'v',
-      negatable: false,
-      help: 'Show additional command output.',
     )
     ..addOption(
       'app-id',

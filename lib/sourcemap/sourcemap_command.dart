@@ -17,12 +17,6 @@ ArgParser buildParserSourcemap() {
       negatable: false,
       help: 'Print sourcemap usage information.',
     )
-    ..addFlag(
-      'verbose',
-      abbr: 'v',
-      negatable: false,
-      help: 'Show additional command output.',
-    )
     ..addOption(
       'app-id',
       help: 'Raygun\'s application ID',
@@ -62,7 +56,7 @@ void parseSourcemapCommand(ArgResults command, bool verbose) {
     print(buildParserSourcemap().usage);
     exit(0);
   }
-  final configProps = ConfigProps.load(command);
+  final configProps = ConfigProps.load(command, verbose: verbose);
 
   switch (command.option('platform')) {
     case null:

@@ -18,7 +18,7 @@ class ConfigProps {
 
   /// Load configuration properties from arguments or environment variables
   /// and return a new instance of [ConfigProps] or exit with code 2.
-  factory ConfigProps.load(ArgResults arguments) {
+  factory ConfigProps.load(ArgResults arguments, {bool verbose = false}) {
     String? appId;
     String? token;
 
@@ -49,7 +49,7 @@ class ConfigProps {
       exit(2);
     }
 
-    if (arguments.wasParsed('verbose')) {
+    if (verbose) {
       print('App ID: $appId');
       print('Token: $token');
     }
