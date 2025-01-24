@@ -7,6 +7,7 @@ class SourcemapFlutter extends SourcemapBase {
   SourcemapFlutter({
     required super.command,
     required super.verbose,
+    required super.config,
   });
 
   @override

@@ -1,12 +1,15 @@
 import 'package:args/args.dart';
 
+import '../config_props.dart';
+
 abstract class SourcemapBase {
   SourcemapBase({
     required this.command,
     required this.verbose,
+    required ConfigProps config,
   }) {
-    appId = command.option('app-id')!;
-    token = command.option('token')!;
+    appId = config.appId;
+    token = config.token;
   }
 
   final ArgResults command;

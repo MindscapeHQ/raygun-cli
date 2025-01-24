@@ -7,6 +7,7 @@ class SourcemapSingleFile extends SourcemapBase {
   SourcemapSingleFile({
     required super.command,
     required super.verbose,
+    required super.config,
   });
 
   @override
