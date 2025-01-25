@@ -31,13 +31,15 @@ ArgParser buildParserDeployments() {
     ..addOption(
       'version',
       mandatory: true,
-      help: 'Version of the software you are deploying and want Raygun to know about',
+      help:
+          'Version of the software you are deploying and want Raygun to know about',
     )
     ..addOption(
       'scm-type',
       mandatory: false,
       allowed: ['GitHub', 'Bitbucket', 'GitLab', 'AzureDevOps'],
-      help: 'Type of the source control management system you are deploying from - if provided, one of [GitHub, Bitbucket, GitLab, AzureDevOps]',
+      help:
+          'Type of the source control management system you are deploying from - if provided, one of [GitHub, Bitbucket, GitLab, AzureDevOps]',
     )
     ..addOption(
       'scm-identifier',
@@ -75,5 +77,4 @@ void parseDeploymentsCommand(ArgResults command, bool verbose) {
     verbose: verbose,
     config: configProps,
   ).notify();
-  
 }

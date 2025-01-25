@@ -11,9 +11,9 @@ Future<bool> createDeployment({
   String? scmIdentifier,
   String? scmType,
 }) async {
+  final url =
+      'https://api.raygun.com/v3/applications/api-key/$apiKey/deployments';
 
-  final url = 'https://api.raygun.com/v3/applications/api-key/$apiKey/deployments';
-  
   final payload = {
     'version': version,
     if (ownerName != null) 'ownerName': ownerName,
@@ -36,7 +36,8 @@ Future<bool> createDeployment({
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('Success creating deployment: ${response.statusCode}');
-      print('Deployment identifier: ${jsonDecode(response.body)['identifier']}');
+      print(
+          'Deployment identifier: ${jsonDecode(response.body)['identifier']}');
       return true;
     }
 

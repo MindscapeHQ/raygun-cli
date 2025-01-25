@@ -31,14 +31,14 @@ class Deployments {
       exit(2);
     }
 
-    final apiKey = command.option('api-key') as String;  
+    final apiKey = command.option('api-key') as String;
     final version = command.option('version') as String;
     final ownerName = command.option('owner-name');
     final emailAddress = command.option('email-address');
     final comment = command.option('comment');
     final scmIdentifier = command.option('scm-identifier');
     final scmType = command.option('scm-type');
-    
+
     if (verbose) {
       print('app-id: $appId');
       print('token: $token');
