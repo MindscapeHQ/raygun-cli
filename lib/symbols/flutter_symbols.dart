@@ -84,11 +84,11 @@ ArgParser buildParserSymbols() {
     )
     ..addOption(
       'app-id',
-      help: 'Raygun\'s application ID',
+      help: 'Raygun application ID',
     )
     ..addOption(
       'token',
-      help: 'Raygun\'s access token',
+      help: 'Raygun access token',
     )
     ..addOption(
       'path',

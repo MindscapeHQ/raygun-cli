@@ -154,6 +154,41 @@ Provide the identifier (`id`) of the symbols file (e.g. `--id=2c7a3u3`). You can
 raygun-cli symbols delete --id=<id> --app-id=APP_ID --token=TOKEN
 ```
 
+#### Deployment Tracking
+
+Send deployment tracking notifications to [raygun.com](https://raygun.com).
+
+Documentation: https://raygun.com/documentation/product-guides/deployment-tracking/overview/
+
+Minimal arguments are:
+
+```
+raygun-cli depoyments --app-id=APP_ID --token=TOKEN --version=<app version> --api-key=<Raygun app API key>
+```
+
+Example outputs:
+
+```
+Success:
+
+Success creating deployment: 201
+Deployment identifier: 2cewu0m
+Deployment created successfully
+
+Missing Access Token:
+
+Error creating deployment: 401
+Response: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"Unauthorized","status":401,"traceId":"00-b9f01ba3ff4a938501c760e6924acc81-53e9411804aa9f2f-00"}
+Failed to create deployment
+
+Access Token misses access to application:
+
+Error creating deployment: 404
+Response: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.5","title":"Not Found","status":404,"traceId":"00-5c3a2423f922d787e20d01456b6c1836-b88c29232af94db8-00"}
+Failed to create deployment
+
+```
+
 ## Development
 
 ### Compiling a binary

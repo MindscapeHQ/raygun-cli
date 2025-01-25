@@ -1,6 +1,7 @@
 import 'package:args/args.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_command.dart';
 import 'package:raygun_cli/symbols/flutter_symbols.dart';
+import 'package:raygun_cli/deployments/deployments_command.dart';
 
 const String version = '0.0.2';
 
@@ -30,6 +31,10 @@ ArgParser buildParser() {
     ..addCommand(
       kSymbolsCommand,
       buildParserSymbols(),
+    )
+    ..addCommand(
+      kDeploymentsCommand,
+      buildParserDeployments(),
     );
 }
 
@@ -71,6 +76,11 @@ void main(List<String> arguments) {
 
     if (results.command?.name == kSymbolsCommand) {
       parseSymbolsCommand(results.command!, verbose);
+      return;
+    }
+
+    if (results.command?.name == kDeploymentsCommand) {
+      parseDeploymentsCommand(results.command!, verbose);
       return;
     }
 
