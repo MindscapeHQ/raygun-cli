@@ -17,10 +17,12 @@ ArgParser buildParserDeployments() {
     )
     ..addOption(
       'app-id',
+      mandatory: true,
       help: 'Raygun application ID',
     )
     ..addOption(
       'token',
+      mandatory: true,
       help: 'Raygun access token',
     )
     ..addOption(
