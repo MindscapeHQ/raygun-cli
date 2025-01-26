@@ -42,9 +42,9 @@ Future<bool> uploadProguardMapping({
     final responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {
-      print('Success uploading Proguard/R8 mapping file: ${response.statusCode}');
       print(
-          'Result: ${responseBody}');
+          'Success uploading Proguard/R8 mapping file: ${response.statusCode}');
+      print('Result: ${responseBody}');
       return true;
     }
 

@@ -38,8 +38,7 @@ ArgParser buildParserProguard() {
     ..addOption(
       'version',
       mandatory: true,
-      help:
-          'Version of the app this mapping file is for',
+      help: 'Version of the app this mapping file is for',
     )
     ..addFlag(
       'overwrite',

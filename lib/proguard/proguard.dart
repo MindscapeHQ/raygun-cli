@@ -37,7 +37,8 @@ class Proguard {
       exit(2);
     }
 
-    final externalAccessToken = command.option('external-access-token') as String;
+    final externalAccessToken =
+        command.option('external-access-token') as String;
     final path = command.option('path') as String;
     final version = command.option('version') as String;
     final overwrite = command.wasParsed('overwrite');
