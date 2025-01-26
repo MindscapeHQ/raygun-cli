@@ -7,8 +7,6 @@ import '../config_props.dart';
 class Deployments {
   final ArgResults command;
   final bool verbose;
-  late final String token;
-  late final String apiKey;
 
   Deployments({
     required this.command,
