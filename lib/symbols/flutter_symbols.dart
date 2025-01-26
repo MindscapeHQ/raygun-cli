@@ -13,11 +13,10 @@ void parseSymbolsCommand(ArgResults command, bool verbose) {
     print(buildParserSymbols().usage);
     exit(0);
   }
-  final configProps = ConfigProps.load(command, verbose: verbose);
   _run(
     command: command,
-    appId: configProps.appId,
-    token: configProps.token,
+    appId: ConfigProp.appIdProp.loadFrom(command),
+    token: ConfigProp.tokenProp.loadFrom(command),
   ).then((result) {
     if (result) {
       exit(0);

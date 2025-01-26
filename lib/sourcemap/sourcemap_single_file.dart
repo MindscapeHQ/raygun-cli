@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:raygun_cli/config_props.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_api.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_base.dart';
 
@@ -7,7 +8,6 @@ class SourcemapSingleFile extends SourcemapBase {
   SourcemapSingleFile({
     required super.command,
     required super.verbose,
-    required super.config,
   });
 
   @override
@@ -23,6 +23,9 @@ class SourcemapSingleFile extends SourcemapBase {
       exit(2);
     }
     final path = command.option('input-map')!;
+
+    final appId = ConfigProp.appIdProp.loadFrom(command);
+    final token = ConfigProp.tokenProp.loadFrom(command);
 
     if (verbose) {
       print('app-id: $appId');

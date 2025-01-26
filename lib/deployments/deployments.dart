@@ -7,40 +7,31 @@ import '../config_props.dart';
 class Deployments {
   final ArgResults command;
   final bool verbose;
-  late final String appId;
   late final String token;
+  late final String apiKey;
 
   Deployments({
     required this.command,
     required this.verbose,
-    required ConfigProps config,
-  }) {
-    appId = config.appId;
-    token = config.token;
-  }
+  });
 
   Future<void> notify() async {
-    if (!command.wasParsed('api-key')) {
-      print('Error: Missing "--api-key"');
-      print('  Please provide "--api-key" via argument');
-      exit(2);
-    }
     if (!command.wasParsed('version')) {
       print('Error: Missing "--version"');
       print('  Please provide "--version" via argument');
       exit(2);
     }
 
-    final apiKey = command.option('api-key') as String;
     final version = command.option('version') as String;
     final ownerName = command.option('owner-name');
     final emailAddress = command.option('email-address');
     final comment = command.option('comment');
     final scmIdentifier = command.option('scm-identifier');
     final scmType = command.option('scm-type');
+    final apiKey = ConfigProp.apiKeyProp.loadFrom(command);
+    final token = ConfigProp.tokenProp.loadFrom(command);
 
     if (verbose) {
-      print('app-id: $appId');
       print('token: $token');
       print('api-key: $apiKey');
       print('version: $version');

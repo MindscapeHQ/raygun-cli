@@ -56,26 +56,22 @@ void parseSourcemapCommand(ArgResults command, bool verbose) {
     print(buildParserSourcemap().usage);
     exit(0);
   }
-  final configProps = ConfigProps.load(command, verbose: verbose);
 
   switch (command.option('platform')) {
     case null:
       SourcemapSingleFile(
         command: command,
         verbose: verbose,
-        config: configProps,
       ).upload();
     case 'flutter':
       SourcemapFlutter(
         command: command,
         verbose: verbose,
-        config: configProps,
       ).upload();
     case 'node':
       SourcemapNode(
         command: command,
         verbose: verbose,
-        config: configProps,
       ).upload();
     default:
       print('Unsupported platform');
