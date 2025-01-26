@@ -5,8 +5,6 @@ import 'package:raygun_cli/sourcemap/flutter/sourcemap_flutter.dart';
 import 'package:raygun_cli/sourcemap/node/sourcemap_node.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_single_file.dart';
 
-import '../config_props.dart';
-
 const kSourcemapCommand = 'sourcemap';
 
 ArgParser buildParserSourcemap() {
