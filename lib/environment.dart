@@ -41,7 +41,7 @@ class Environment {
       case raygunApiKeyKey:
         return raygunApiKey;
       default:
-        return null;
+        throw ArgumentError('Unknown environment variable: $key');
     }
   }
 
@@ -50,8 +50,9 @@ class Environment {
     final raygunToken = Platform.environment[raygunTokenKey];
     final raygunApiKey = Platform.environment[raygunApiKeyKey];
     return Environment(
-        raygunAppId: raygunAppId,
-        raygunToken: raygunToken,
-        raygunApiKey: raygunApiKey);
+      raygunAppId: raygunAppId,
+      raygunToken: raygunToken,
+      raygunApiKey: raygunApiKey,
+    );
   }
 }
