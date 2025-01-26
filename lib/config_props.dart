@@ -6,6 +6,7 @@ import 'package:raygun_cli/environment.dart';
 /// A Config property is a value
 /// that can be set via argument
 /// or environment variable.
+/// TODO: #5 add support for config files (.raygun.yaml or similar)
 class ConfigProp {
   static const appId = ConfigProp(
     name: 'app-id',
