@@ -43,6 +43,16 @@ Or use directly from sources:
 dart bin/raygun_cli.dart <command> <arguments>
 ```
 
+#### Built-in help
+
+Using the `--help` argument will usually output a list of command-specifc arguments and their meanings.
+
+Example:
+
+```
+raygun-cli deployments --help
+```
+
 #### Configuration parameters
 
 All `raygun-cli` commands share the same configuration parameters.
@@ -93,6 +103,42 @@ raygun-cli sourcemap -p flutter --uri=https://example.com/main.dart.js --app-id=
 ##### NodeJS Sourcemaps
 
 _Not available yet!_
+
+#### Android Proguard/R8 Uploader
+
+Upload Proguard and R8 mapping files for Android to [raygun.com](https://raygun.com).
+
+Documentation: https://raygun.com/documentation/language-guides/android/crash-reporting/proguard/
+```
+raygun-cli proguard <arguments>
+```
+
+```
+raygun-cli proguard --app-id=APP_ID --token=TOKEN --version=<app version> --path=<Path to mapping.txt file> --external-access-token=<EAT from your Raygun user account settings> --overwrite
+```
+
+Example outputs:
+
+```
+Success:
+
+Uploading: <somewhere>/mapping.txt
+Success uploading Proguard/R8 mapping file: 200
+Result: true
+
+Mapping file for version already exists:
+
+Uploading: <somewhere>/mapping.txt
+Error uploading Proguard/R8 mapping file: 400
+Response: File 1.2.3.5 already exists. Please set overwrite=true if you really want to overwrite it.
+
+Wrong External Access Token:
+
+Uploading: <somewhere>/mapping.txt
+Error uploading Proguard/R8 mapping file: 302
+Response:
+
+```
 
 #### Flutter obfuscation symbols
 
