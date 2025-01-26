@@ -12,8 +12,8 @@ void main() {
         ..addOption('token');
       final results =
           parser.parse(['--app-id=app-id-parsed', '--token=token-parsed']);
-      final token = ConfigProp.tokenProp.loadFrom(results);
-      final appId = ConfigProp.appIdProp.loadFrom(results);
+      final token = ConfigProp.token.load(results);
+      final appId = ConfigProp.appId.load(results);
       expect(appId, 'app-id-parsed');
       expect(token, 'token-parsed');
     });
@@ -39,9 +39,9 @@ void main() {
       final results = parser.parse([]);
 
       // load from env vars
-      final appId = ConfigProp.appIdProp.loadFrom(results);
-      final token = ConfigProp.tokenProp.loadFrom(results);
-      final apiKey = ConfigProp.apiKeyProp.loadFrom(results);
+      final appId = ConfigProp.appId.load(results);
+      final token = ConfigProp.token.load(results);
+      final apiKey = ConfigProp.apiKey.load(results);
       expect(appId, 'app-id-env');
       expect(token, 'token-env');
       expect(apiKey, 'api-key-env');
@@ -72,9 +72,9 @@ void main() {
       ]);
 
       // load from parsed even if env vars are set
-      final appId = ConfigProp.appIdProp.loadFrom(results);
-      final token = ConfigProp.tokenProp.loadFrom(results);
-      final apiKey = ConfigProp.apiKeyProp.loadFrom(results);
+      final appId = ConfigProp.appId.load(results);
+      final token = ConfigProp.token.load(results);
+      final apiKey = ConfigProp.apiKey.load(results);
       expect(appId, 'app-id-parsed');
       expect(token, 'token-parsed');
       expect(apiKey, 'api-key-parsed');
@@ -101,8 +101,8 @@ void main() {
       final results = parser.parse(['--token=token-parsed']);
 
       // app-id from env, token from argument
-      final appId = ConfigProp.appIdProp.loadFrom(results);
-      final token = ConfigProp.tokenProp.loadFrom(results);
+      final appId = ConfigProp.appId.load(results);
+      final token = ConfigProp.token.load(results);
       expect(appId, 'app-id-env');
       expect(token, 'token-parsed');
     });

@@ -7,17 +7,17 @@ import 'package:raygun_cli/environment.dart';
 /// that can be set via argument
 /// or environment variable.
 class ConfigProp {
-  static const appIdProp = ConfigProp(
+  static const appId = ConfigProp(
     name: 'app-id',
     envKey: Environment.raygunAppIdKey,
   );
 
-  static const tokenProp = ConfigProp(
+  static const token = ConfigProp(
     name: 'token',
     envKey: Environment.raygunTokenKey,
   );
 
-  static const apiKeyProp = ConfigProp(
+  static const apiKey = ConfigProp(
     name: 'api-key',
     envKey: Environment.raygunApiKeyKey,
   );
@@ -34,7 +34,7 @@ class ConfigProp {
   });
 
   /// Load the value of the property from arguments or environment variables
-  String loadFrom(ArgResults arguments) {
+  String load(ArgResults arguments) {
     String? value;
     if (arguments.wasParsed(name)) {
       value = arguments[name];

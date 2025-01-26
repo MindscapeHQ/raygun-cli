@@ -15,8 +15,8 @@ void parseSymbolsCommand(ArgResults command, bool verbose) {
   }
   _run(
     command: command,
-    appId: ConfigProp.appIdProp.loadFrom(command),
-    token: ConfigProp.tokenProp.loadFrom(command),
+    appId: ConfigProp.appId.load(command),
+    token: ConfigProp.token.load(command),
   ).then((result) {
     if (result) {
       exit(0);
