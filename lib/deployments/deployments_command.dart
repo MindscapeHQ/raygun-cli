@@ -15,6 +15,7 @@ ArgParser buildParserDeployments() {
     )
     ..addOption(
       'token',
+      mandatory: true,
       help: 'Raygun access token',
     )
     ..addOption(
