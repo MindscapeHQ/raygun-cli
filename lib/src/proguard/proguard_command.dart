@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:raygun_cli/proguard/proguard.dart';
+import 'package:raygun_cli/src/proguard/proguard.dart';
 
 const kProguardCommand = 'proguard';
 

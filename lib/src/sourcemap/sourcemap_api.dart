@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
+/// Uploads a sourcemap file to Raygun.
+/// returns true if the upload was successful.
 Future<bool> uploadSourcemap({
   required String appId,
   required String token,

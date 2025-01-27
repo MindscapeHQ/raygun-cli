@@ -1,7 +1,9 @@
 import 'dart:io';
 
-import 'package:raygun_cli/sourcemap/sourcemap_base.dart';
+import 'package:raygun_cli/src/sourcemap/sourcemap_base.dart';
 
+/// Uploads a Node app sourcemap file to Raygun.
+/// TODO: Not implemented yet.
 class SourcemapNode extends SourcemapBase {
   SourcemapNode({
     required super.command,

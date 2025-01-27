@@ -1,6 +1,6 @@
 import 'package:args/args.dart';
-import 'package:raygun_cli/config_props.dart';
-import 'package:raygun_cli/environment.dart';
+import 'package:raygun_cli/src/config_props.dart';
+import 'package:raygun_cli/src/environment.dart';
 import 'package:test/test.dart';
 
 void main() {
