@@ -18,15 +18,55 @@ jobs:
       - name: Build Linux binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli
 
-      - name: Upload Linux binary
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-binary
-          path: raygun-cli
       - uses: montudor/action-zip@v1
         with:
           args: zip -qq raygun-cli-linux.zip raygun-cli
+
       - uses: AButler/upload-release-assets@v3.0
         with:
           files: "raygun-cli-linux.zip"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Build MacOS binary
+        run: dart compile exe bin/raygun_cli.dart -o raygun-cli
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq raygun-cli-macos.zip raygun-cli
+
+      - uses: AButler/upload-release-assets@v3.0
+        with:
+          files: "raygun-cli-macos.zip"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Build Windows binary
+        run: dart compile exe bin/raygun_cli.dart -o raygun-cli.exe
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq raygun-cli-windows.zip raygun-cli.exe
+
+      - uses: AButler/upload-release-assets@v3.0
+        with:
+          files: "raygun-cli-windows.zip"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
