@@ -1,5 +1,5 @@
 name: raygun_cli
-description: Command-line tool for Raygun.com
+description: A command-line tool for uploading sourcemaps, managing obfuscation symbols, and tracking deployments in Raygun.com
 # Update version in bin/raygun_cli.dart as well
 version: 0.0.2
 repository: https://github.com/MindscapeHQ/raygun-cli/
