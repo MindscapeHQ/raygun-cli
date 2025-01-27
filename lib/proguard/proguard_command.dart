@@ -21,11 +21,6 @@ ArgParser buildParserProguard() {
       help: 'Raygun application ID',
     )
     ..addOption(
-      'token',
-      mandatory: true,
-      help: 'Raygun access token',
-    )
-    ..addOption(
       'external-access-token',
       mandatory: true,
       help: 'Raygun external access token',
@@ -54,11 +49,8 @@ void parseProguardCommand(ArgResults command, bool verbose) {
     exit(0);
   }
 
-  final configProps = ConfigProps.load(command, verbose: verbose);
-
   Proguard(
     command: command,
     verbose: verbose,
-    config: configProps,
   ).upload();
 }

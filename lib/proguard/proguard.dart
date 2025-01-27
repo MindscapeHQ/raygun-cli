@@ -7,16 +7,11 @@ import '../config_props.dart';
 class Proguard {
   final ArgResults command;
   final bool verbose;
-  late final String appId;
-  late final String token;
+
   Proguard({
     required this.command,
     required this.verbose,
-    required ConfigProps config,
-  }) {
-    appId = config.appId;
-    token = config.token;
-  }
+  });
 
   Future<void> upload() async {
     if (!command.wasParsed('path')) {
@@ -42,10 +37,10 @@ class Proguard {
     final path = command.option('path') as String;
     final version = command.option('version') as String;
     final overwrite = command.wasParsed('overwrite');
+    final appId = command.option('app-id') as String;
 
     if (verbose) {
       print('app-id: $appId');
-      print('token: $token');
       print('external-access-token: $externalAccessToken');
       print('path: $path');
       print('version: $version');
