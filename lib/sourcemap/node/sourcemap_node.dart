@@ -6,7 +6,6 @@ class SourcemapNode extends SourcemapBase {
   SourcemapNode({
     required super.command,
     required super.verbose,
-    required super.config,
   });
 
   @override

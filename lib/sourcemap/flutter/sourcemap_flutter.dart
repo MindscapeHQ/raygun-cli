@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:raygun_cli/config_props.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_api.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_base.dart';
 
@@ -7,7 +8,6 @@ class SourcemapFlutter extends SourcemapBase {
   SourcemapFlutter({
     required super.command,
     required super.verbose,
-    required super.config,
   });
 
   @override
@@ -19,6 +19,8 @@ class SourcemapFlutter extends SourcemapBase {
     final uri =
         command.option('uri') ?? '${command.option('base-uri')}main.dart.js';
     final path = command.option('input-map') ?? 'build/web/main.dart.js.map';
+    final appId = ConfigProp.appId.load(command);
+    final token = ConfigProp.token.load(command);
     if (verbose) {
       print('app-id: $appId');
       print('token: $token');

@@ -12,9 +12,10 @@ void main() {
         ..addOption('token');
       final results =
           parser.parse(['--app-id=app-id-parsed', '--token=token-parsed']);
-      final props = ConfigProps.load(results);
-      expect(props.appId, 'app-id-parsed');
-      expect(props.token, 'token-parsed');
+      final token = ConfigProp.token.load(results);
+      final appId = ConfigProp.appId.load(results);
+      expect(appId, 'app-id-parsed');
+      expect(token, 'token-parsed');
     });
 
     test('should parse from env vars', () {
@@ -23,6 +24,7 @@ void main() {
         Environment(
           raygunAppId: 'app-id-env',
           raygunToken: 'token-env',
+          raygunApiKey: 'api-key-env',
         ),
       );
 
@@ -30,15 +32,19 @@ void main() {
       ArgParser parser = ArgParser()
         ..addFlag('verbose')
         ..addOption('app-id')
+        ..addOption('api-key')
         ..addOption('token');
 
       // parse nothing
       final results = parser.parse([]);
 
       // load from env vars
-      final props = ConfigProps.load(results);
-      expect(props.appId, 'app-id-env');
-      expect(props.token, 'token-env');
+      final appId = ConfigProp.appId.load(results);
+      final token = ConfigProp.token.load(results);
+      final apiKey = ConfigProp.apiKey.load(results);
+      expect(appId, 'app-id-env');
+      expect(token, 'token-env');
+      expect(apiKey, 'api-key-env');
     });
 
     test('should parse with priority', () {
@@ -47,6 +53,7 @@ void main() {
         Environment(
           raygunAppId: 'app-id-env',
           raygunToken: 'token-env',
+          raygunApiKey: 'api-key-env',
         ),
       );
 
@@ -54,16 +61,23 @@ void main() {
       ArgParser parser = ArgParser()
         ..addFlag('verbose')
         ..addOption('app-id')
+        ..addOption('api-key')
         ..addOption('token');
 
       // parse arguments
-      final results =
-          parser.parse(['--app-id=app-id-parsed', '--token=token-parsed']);
+      final results = parser.parse([
+        '--app-id=app-id-parsed',
+        '--token=token-parsed',
+        '--api-key=api-key-parsed',
+      ]);
 
       // load from parsed even if env vars are set
-      final props = ConfigProps.load(results);
-      expect(props.appId, 'app-id-parsed');
-      expect(props.token, 'token-parsed');
+      final appId = ConfigProp.appId.load(results);
+      final token = ConfigProp.token.load(results);
+      final apiKey = ConfigProp.apiKey.load(results);
+      expect(appId, 'app-id-parsed');
+      expect(token, 'token-parsed');
+      expect(apiKey, 'api-key-parsed');
     });
 
     test('should parse from both', () {
@@ -73,6 +87,7 @@ void main() {
         Environment(
           raygunAppId: 'app-id-env',
           raygunToken: null,
+          raygunApiKey: null,
         ),
       );
 
@@ -86,9 +101,10 @@ void main() {
       final results = parser.parse(['--token=token-parsed']);
 
       // app-id from env, token from argument
-      final props = ConfigProps.load(results);
-      expect(props.appId, 'app-id-env');
-      expect(props.token, 'token-parsed');
+      final appId = ConfigProp.appId.load(results);
+      final token = ConfigProp.token.load(results);
+      expect(appId, 'app-id-env');
+      expect(token, 'token-parsed');
     });
   });
 }

@@ -3,60 +3,51 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:raygun_cli/environment.dart';
 
-/// Configuration properties for the Raygun CLI
-class ConfigProps {
-  /// Raygun's application ID
-  final String appId;
+/// A Config property is a value
+/// that can be set via argument
+/// or environment variable.
+/// TODO: #5 add support for config files (.raygun.yaml or similar)
+class ConfigProp {
+  static const appId = ConfigProp(
+    name: 'app-id',
+    envKey: Environment.raygunAppIdKey,
+  );
 
-  /// Raygun's access token
-  final String token;
+  static const token = ConfigProp(
+    name: 'token',
+    envKey: Environment.raygunTokenKey,
+  );
 
-  ConfigProps._({
-    required this.appId,
-    required this.token,
+  static const apiKey = ConfigProp(
+    name: 'api-key',
+    envKey: Environment.raygunApiKeyKey,
+  );
+
+  /// The name of the property
+  final String name;
+
+  /// The environment variable key
+  final String envKey;
+
+  const ConfigProp({
+    required this.name,
+    required this.envKey,
   });
 
-  /// Load configuration properties from arguments or environment variables
-  /// and return a new instance of [ConfigProps] or exit with code 2.
-  factory ConfigProps.load(ArgResults arguments, {bool verbose = false}) {
-    String? appId;
-    String? token;
-
-    // Providing app-id and token via argument takes priority
-    if (arguments.wasParsed('app-id')) {
-      appId = arguments['app-id'];
+  /// Load the value of the property from arguments or environment variables
+  String load(ArgResults arguments) {
+    String? value;
+    if (arguments.wasParsed(name)) {
+      value = arguments[name];
     } else {
-      appId = Environment.instance.raygunAppId;
+      value = Environment.instance[envKey];
     }
-
-    if (appId == null) {
-      print('Error: Missing "app-id"');
+    if (value == null) {
+      print('Error: Missing "$name"');
       print(
-          '  Please provide "app-id" via argument or environment variable "RAYGUN_APP_ID"');
+          '  Please provide "$name" via argument or environment variable "$envKey"');
       exit(2);
     }
-
-    if (arguments.wasParsed('token')) {
-      token = arguments['token'];
-    } else {
-      token = Environment.instance.raygunToken;
-    }
-
-    if (token == null) {
-      print('Error: Missing "token"');
-      print(
-          '  Please provide "token" via argument or environment variable "RAYGUN_TOKEN"');
-      exit(2);
-    }
-
-    if (verbose) {
-      print('App ID: $appId');
-      print('Token: $token');
-    }
-
-    return ConfigProps._(
-      appId: appId,
-      token: token,
-    );
+    return value;
   }
 }

@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:raygun_cli/deployments/deployments.dart';
 
-import '../config_props.dart';
-
 const kDeploymentsCommand = 'deployments';
 
 ArgParser buildParserDeployments() {
@@ -14,11 +12,6 @@ ArgParser buildParserDeployments() {
       abbr: 'h',
       negatable: false,
       help: 'Print deployments usage information',
-    )
-    ..addOption(
-      'app-id',
-      mandatory: true,
-      help: 'Raygun application ID',
     )
     ..addOption(
       'token',
@@ -72,11 +65,8 @@ void parseDeploymentsCommand(ArgResults command, bool verbose) {
     exit(0);
   }
 
-  final configProps = ConfigProps.load(command, verbose: verbose);
-
   Deployments(
     command: command,
     verbose: verbose,
-    config: configProps,
   ).notify();
 }
