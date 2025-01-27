@@ -1,8 +1,5 @@
 import 'package:args/args.dart';
-import 'package:raygun_cli/sourcemap/sourcemap_command.dart';
-import 'package:raygun_cli/symbols/flutter_symbols.dart';
-import 'package:raygun_cli/deployments/deployments_command.dart';
-import 'package:raygun_cli/proguard/proguard_command.dart';
+import 'package:raygun_cli/raygun_cli.dart';
 
 const String version = '0.0.2';
 

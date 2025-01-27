@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:raygun_cli/config_props.dart';
-import 'package:raygun_cli/sourcemap/sourcemap_api.dart';
-import 'package:raygun_cli/sourcemap/sourcemap_base.dart';
+import 'package:raygun_cli/src/config_props.dart';
+import 'package:raygun_cli/src/sourcemap/sourcemap_api.dart';
+import 'package:raygun_cli/src/sourcemap/sourcemap_base.dart';
 
+/// Uploads a Flutter web sourcemap file to Raygun.
 class SourcemapFlutter extends SourcemapBase {
   SourcemapFlutter({
     required super.command,

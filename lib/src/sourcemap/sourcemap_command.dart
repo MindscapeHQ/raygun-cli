@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:raygun_cli/sourcemap/flutter/sourcemap_flutter.dart';
-import 'package:raygun_cli/sourcemap/node/sourcemap_node.dart';
-import 'package:raygun_cli/sourcemap/sourcemap_single_file.dart';
+import 'package:raygun_cli/src/sourcemap/flutter/sourcemap_flutter.dart';
+import 'package:raygun_cli/src/sourcemap/node/sourcemap_node.dart';
+import 'package:raygun_cli/src/sourcemap/sourcemap_single_file.dart';
 
 const kSourcemapCommand = 'sourcemap';
 
+/// Creates a parser for the sourcemap command
 ArgParser buildParserSourcemap() {
   return ArgParser()
     ..addFlag(
@@ -48,6 +49,7 @@ ArgParser buildParserSourcemap() {
     );
 }
 
+/// Parses the sourcemap command
 void parseSourcemapCommand(ArgResults command, bool verbose) {
   if (command.wasParsed('help')) {
     print('Usage: raygun-cli sourcemap <arguments>');

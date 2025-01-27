@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:raygun_cli/environment.dart';
+import 'package:raygun_cli/src/environment.dart';
 
 /// A Config property is a value
 /// that can be set via argument

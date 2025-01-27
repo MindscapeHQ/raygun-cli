@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+/// Creates a deployment in Raygun.
 Future<bool> createDeployment({
   required String token,
   required String apiKey,

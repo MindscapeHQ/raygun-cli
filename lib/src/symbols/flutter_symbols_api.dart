@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
+/// Uploads Flutter symbols files to Raygun.
 Future<bool> uploadSymbols({
   required String appId,
   required String token,
@@ -42,6 +43,7 @@ Future<bool> uploadSymbols({
   }
 }
 
+/// Lists Flutter symbols files in Raygun.
 Future<bool> listSymbols({
   required String appId,
   required String token,
@@ -72,6 +74,7 @@ Future<bool> listSymbols({
   }
 }
 
+/// Deletes a Flutter symbols file in Raygun.
 Future<bool> deleteSymbols({
   required String appId,
   required String token,

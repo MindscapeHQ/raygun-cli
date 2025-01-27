@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:raygun_cli/deployments/deployments_api.dart';
+import 'package:raygun_cli/src/deployments/deployments_api.dart';
 import 'package:args/args.dart';
 import '../config_props.dart';
 
+/// Deployments command
 class Deployments {
   final ArgResults command;
   final bool verbose;
@@ -13,6 +14,7 @@ class Deployments {
     required this.verbose,
   });
 
+  /// Notifies Raygun that a new deployment has been made.
   Future<void> notify() async {
     if (!command.wasParsed('version')) {
       print('Error: Missing "--version"');

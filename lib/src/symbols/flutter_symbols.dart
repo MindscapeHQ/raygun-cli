@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:raygun_cli/config_props.dart';
-import 'package:raygun_cli/symbols/flutter_symbols_api.dart';
+import 'package:raygun_cli/src/config_props.dart';
+import 'package:raygun_cli/src/symbols/flutter_symbols_api.dart';
 
 const kSymbolsCommand = 'symbols';
 
+/// Parses the symbols command
 void parseSymbolsCommand(ArgResults command, bool verbose) {
   if (command.wasParsed('help')) {
     print(
@@ -73,6 +74,7 @@ Future<bool> _run({
   return false;
 }
 
+/// Builds the symbols command parser
 ArgParser buildParserSymbols() {
   return ArgParser()
     ..addFlag(

@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:raygun_cli/config_props.dart';
-import 'package:raygun_cli/sourcemap/sourcemap_api.dart';
-import 'package:raygun_cli/sourcemap/sourcemap_base.dart';
+import 'package:raygun_cli/src/config_props.dart';
+import 'package:raygun_cli/src/sourcemap/sourcemap_api.dart';
+import 'package:raygun_cli/src/sourcemap/sourcemap_base.dart';
 
+/// Uploads a single sourcemap file to Raygun.
 class SourcemapSingleFile extends SourcemapBase {
   SourcemapSingleFile({
     required super.command,

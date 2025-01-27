@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:raygun_cli/proguard/proguard_api.dart';
+import 'package:raygun_cli/src/proguard/proguard_api.dart';
 import 'package:args/args.dart';
 import '../config_props.dart';
 

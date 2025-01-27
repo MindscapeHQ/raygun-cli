@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:raygun_cli/deployments/deployments.dart';
+import 'package:raygun_cli/src/deployments/deployments.dart';
 
 const kDeploymentsCommand = 'deployments';
 
+/// Builds the deployments command parser
 ArgParser buildParserDeployments() {
   return ArgParser()
     ..addFlag(
@@ -58,6 +59,7 @@ ArgParser buildParserDeployments() {
     );
 }
 
+/// Parses the deployments command arguments
 void parseDeploymentsCommand(ArgResults command, bool verbose) {
   if (command.wasParsed('help')) {
     print('Usage: raygun-cli deployments <arguments>');
