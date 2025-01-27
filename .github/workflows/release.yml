@@ -18,9 +18,8 @@ jobs:
       - name: Build Linux binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli
 
-      - uses: montudor/action-zip@v1
-        with:
-          args: zip -qq raygun-cli-linux.zip raygun-cli
+      - name: Zip Linux binary
+        run: zip raygun-cli-linux.zip raygun-cli
 
       - uses: AButler/upload-release-assets@v3.0
         with:
@@ -40,9 +39,8 @@ jobs:
       - name: Build MacOS binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli
 
-      - uses: montudor/action-zip@v1
-        with:
-          args: zip -qq raygun-cli-macos.zip raygun-cli
+      - name: Zip MacOS binary
+        run: zip raygun-cli-macos.zip raygun-cli
 
       - uses: AButler/upload-release-assets@v3.0
         with:
@@ -62,9 +60,8 @@ jobs:
       - name: Build Windows binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli.exe
 
-      - uses: montudor/action-zip@v1
-        with:
-          args: zip -qq raygun-cli-windows.zip raygun-cli.exe
+      - name: Zip Windows binary
+        run: 7z a -t7z raygun-cli-windows.zip raygun-cli.exe
 
       - uses: AButler/upload-release-assets@v3.0
         with:
