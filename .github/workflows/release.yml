@@ -23,7 +23,10 @@ jobs:
         with:
           name: linux-binary
           path: raygun-cli
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq raygun-cli-linux.zip raygun-cli
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: "artifacts/*"
+          files: "raygun-cli-linux.zip"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
