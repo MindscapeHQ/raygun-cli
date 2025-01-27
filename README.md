@@ -15,7 +15,10 @@ In the future, this tool will also be available as standalone binary file in oth
 
 **Install binary**
 
-_Not available yet!_
+Pre-compiled binaries for Linux, MacOS and Windows are avaible for download
+in the [releases section](https://github.com/MindscapeHQ/raygun-cli/releases).
+
+_Installing through system package managers will be available in the future!_
 
 **Install from pub.dev**
 

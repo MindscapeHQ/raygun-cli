@@ -1,0 +1,75 @@
+name: Release binaries
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Build Linux binary
+        run: dart compile exe bin/raygun_cli.dart -o raygun-cli
+
+      - name: Zip Linux binary
+        run: zip raygun-cli-linux.zip raygun-cli
+
+      - uses: AButler/upload-release-assets@v3.0
+        with:
+          files: "raygun-cli-linux.zip"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Build MacOS binary
+        run: dart compile exe bin/raygun_cli.dart -o raygun-cli
+
+      - name: Zip MacOS binary
+        run: zip raygun-cli-macos.zip raygun-cli
+
+      - uses: AButler/upload-release-assets@v3.0
+        with:
+          files: "raygun-cli-macos.zip"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Build Windows binary
+        run: dart compile exe bin/raygun_cli.dart -o raygun-cli.exe
+
+      - name: Zip Windows binary
+        run: 7z a -t7z raygun-cli-windows.zip raygun-cli.exe
+
+      - uses: AButler/upload-release-assets@v3.0
+        with:
+          files: "raygun-cli-windows.zip"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
