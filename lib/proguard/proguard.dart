@@ -37,7 +37,7 @@ class Proguard {
     final path = command.option('path') as String;
     final version = command.option('version') as String;
     final overwrite = command.wasParsed('overwrite');
-    final appId = command.option('app-id') as String;
+    final appId = ConfigProp.appId.load(command);
 
     if (verbose) {
       print('app-id: $appId');

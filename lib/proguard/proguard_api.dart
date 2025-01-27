@@ -43,12 +43,12 @@ Future<bool> uploadProguardMapping({
     if (response.statusCode == 200) {
       print(
           'Success uploading Proguard/R8 mapping file: ${response.statusCode}');
-      print('Result: ${responseBody}');
+      print('Result: $responseBody');
       return true;
     }
 
     print('Error uploading Proguard/R8 mapping file: ${response.statusCode}');
-    print('Response: ${responseBody}');
+    print('Response: $responseBody');
     return false;
   } catch (e) {
     print('Exception while uploading Proguard/R8 mapping file: $e');

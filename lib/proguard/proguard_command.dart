@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:raygun_cli/proguard/proguard.dart';
 
-import '../config_props.dart';
-
 const kProguardCommand = 'proguard';
 
 ArgParser buildParserProguard() {
