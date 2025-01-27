@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: dart-lang/setup-dart@v1
 
@@ -30,6 +32,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: dart-lang/setup-dart@v1
 
@@ -51,6 +55,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: dart-lang/setup-dart@v1
 
