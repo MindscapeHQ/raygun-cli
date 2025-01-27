@@ -5,8 +5,6 @@ import 'package:raygun_cli/sourcemap/flutter/sourcemap_flutter.dart';
 import 'package:raygun_cli/sourcemap/node/sourcemap_node.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_single_file.dart';
 
-import '../config_props.dart';
-
 const kSourcemapCommand = 'sourcemap';
 
 ArgParser buildParserSourcemap() {
@@ -56,26 +54,22 @@ void parseSourcemapCommand(ArgResults command, bool verbose) {
     print(buildParserSourcemap().usage);
     exit(0);
   }
-  final configProps = ConfigProps.load(command, verbose: verbose);
 
   switch (command.option('platform')) {
     case null:
       SourcemapSingleFile(
         command: command,
         verbose: verbose,
-        config: configProps,
       ).upload();
     case 'flutter':
       SourcemapFlutter(
         command: command,
         verbose: verbose,
-        config: configProps,
       ).upload();
     case 'node':
       SourcemapNode(
         command: command,
         verbose: verbose,
-        config: configProps,
       ).upload();
     default:
       print('Unsupported platform');
