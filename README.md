@@ -59,6 +59,7 @@ All `raygun-cli` commands share the same configuration parameters.
 
 - App ID: The Application ID in Raygun.com.
 - Token: An access token from https://app.raygun.com/user/tokens.
+- API key: The API key of your application in Raygun.com
 
 You can pass these parameters via arguments, e.g. `--app-id=<id>`
 or you can set them as environment variables.
@@ -69,6 +70,8 @@ Parameters passed as arguments have priority over environment variables.
 |-----------|----------|----------------------|
 | App ID    | `app-id` | `RAYGUN_APP_ID`      |
 | Token     | `token`  | `RAYGUN_TOKEN`       |
+| API key   | `api-key`| `RAYGUN_API_KEY`     |
+
 
 #### Sourcemap Uploader
 
@@ -113,8 +116,10 @@ Documentation: https://raygun.com/documentation/language-guides/android/crash-re
 raygun-cli proguard <arguments>
 ```
 
+Minimal required arguments are:
+
 ```
-raygun-cli proguard --app-id=APP_ID --token=TOKEN --version=<app version> --path=<Path to mapping.txt file> --external-access-token=<EAT from your Raygun user account settings> --overwrite
+raygun-cli proguard --app-id=APP_ID --version=<app version> --path=<Path to mapping.txt file> --external-access-token=<EAT from your Raygun user account settings> --overwrite
 ```
 
 Example outputs:
@@ -206,10 +211,10 @@ Send deployment tracking notifications to [raygun.com](https://raygun.com).
 
 Documentation: https://raygun.com/documentation/product-guides/deployment-tracking/overview/
 
-Minimal arguments are:
+Minimal required arguments are:
 
 ```
-raygun-cli depoyments --app-id=APP_ID --token=TOKEN --version=<app version> --api-key=<Raygun app API key>
+raygun-cli depoyments --token=TOKEN --version=<app version> --api-key=API_KEY
 ```
 
 Example outputs:
