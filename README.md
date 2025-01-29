@@ -1,17 +1,13 @@
 ## Raygun CLI
 
+[![GitHub Release](https://img.shields.io/github/v/release/MindscapeHQ/raygun-cli)](https://github.com/MindscapeHQ/raygun-cli/releases)
+[![Pub Version](https://img.shields.io/pub/v/raygun_cli)](https://pub.dev/packages/raygun_cli)
+
 Command-line tool for [raygun.com](https://raygun.com).
 
 ### Install
 
 You can install this tool in different ways.
-
-At the moment, a Dart SDK setup is necessary.
-You can get the Dart SDK here: https://dart.dev/get-dart or as part of your Flutter SDK installation.
-
-Note: `$HOME/.pub-cache/bin` must be in your path.
-
-In the future, this tool will also be available as standalone binary file in other distribution channels.
 
 **Install binary**
 
@@ -22,11 +18,19 @@ _Installing through system package managers will be available in the future!_
 
 **Install from pub.dev**
 
+To install from [pub.dev](https://pub.dev), Dart SDK setup is necessary.
+
+You can get the Dart SDK here: https://dart.dev/get-dart or as part of your Flutter SDK installation.
+
+Note: `$HOME/.pub-cache/bin` must be in your path.
+
 ```
 dart pub global activate raygun_cli 
 ```
 
 **Install from sources**
+
+Compile and install the this tool with the following command:
 
 ```
 dart pub global activate -s path .
