@@ -27,8 +27,8 @@ ArgParser buildParser() {
       buildParserSourcemap(),
     )
     ..addCommand(
-      kSymbolsCommand,
-      buildParserSymbols(),
+      symbolsCommand.name,
+      symbolsCommand.buildParserSymbols(),
     )
     ..addCommand(
       kDeploymentsCommand,
@@ -76,8 +76,8 @@ void main(List<String> arguments) {
       return;
     }
 
-    if (results.command?.name == kSymbolsCommand) {
-      parseSymbolsCommand(results.command!, verbose);
+    if (results.command?.name == symbolsCommand.name) {
+      symbolsCommand.execute(results.command!, verbose);
       return;
     }
 
