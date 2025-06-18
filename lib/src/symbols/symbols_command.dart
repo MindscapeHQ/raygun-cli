@@ -3,12 +3,16 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:raygun_cli/src/config_props.dart';
 import 'package:raygun_cli/src/raygun_command.dart';
-import 'package:raygun_cli/src/symbols/flutter_symbols_api.dart';
+import 'package:raygun_cli/src/symbols/symbols_api.dart';
 
 const SymbolsCommand symbolsCommand = SymbolsCommand();
 
 class SymbolsCommand extends RaygunCommand {
-  const SymbolsCommand();
+  const SymbolsCommand({
+    this.flutterSymbolsApi = const SymbolsApi(),
+  });
+
+  final SymbolsApi flutterSymbolsApi;
 
   @override
   String get name => 'symbols';
@@ -50,7 +54,7 @@ class SymbolsCommand extends RaygunCommand {
       }
       final path = command['path'];
       final version = command['version'];
-      return uploadSymbols(
+      return flutterSymbolsApi.uploadSymbols(
         appId: appId,
         token: token,
         path: path,
@@ -59,7 +63,7 @@ class SymbolsCommand extends RaygunCommand {
     }
 
     if (command.command?.name == 'list') {
-      return listSymbols(
+      return flutterSymbolsApi.listSymbols(
         appId: appId,
         token: token,
       );
@@ -71,7 +75,7 @@ class SymbolsCommand extends RaygunCommand {
         print(buildParserSymbols().usage);
         return false;
       }
-      return deleteSymbols(
+      return flutterSymbolsApi.deleteSymbols(
         appId: appId,
         token: token,
         id: command['id'],
