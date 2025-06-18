@@ -6,6 +6,7 @@
 - `dart analyze` - Run linter/analysis (uses package:lints/recommended.yaml)
 - `dart compile exe bin/raygun_cli.dart -o raygun-cli` - Build executable
 - `dart run bin/raygun_cli.dart` - Run CLI locally
+- `dart format .` - Format code
 
 ## Architecture
 - **CLI Tool**: Uploads sourcemaps, manages obfuscation symbols, tracks deployments for Raygun.com
