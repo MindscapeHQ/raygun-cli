@@ -43,8 +43,8 @@ class SymbolsCommand extends RaygunCommand {
   @override
   Future<bool> run({
     required ArgResults command,
-    required appId,
-    required token,
+    required String appId,
+    required String token,
   }) async {
     if (command.command?.name == 'upload') {
       if (!command.wasParsed('path') || !command.wasParsed('version')) {
@@ -122,8 +122,6 @@ class SymbolsCommand extends RaygunCommand {
       )
       ..addCommand(
         'delete',
-
-        /// Builds the symbols command parser
       );
   }
 }
