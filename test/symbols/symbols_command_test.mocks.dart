@@ -38,15 +38,14 @@ class MockSymbolsApi extends _i1.Mock implements _i2.SymbolsApi {
     required String? version,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#uploadSymbols, [], {
-              #appId: appId,
-              #token: token,
-              #path: path,
-              #version: version,
-            }),
-            returnValue: _i3.Future<bool>.value(false),
-          )
-          as _i3.Future<bool>);
+        Invocation.method(#uploadSymbols, [], {
+          #appId: appId,
+          #token: token,
+          #path: path,
+          #version: version,
+        }),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 
   @override
   _i3.Future<bool> listSymbols({
@@ -54,10 +53,9 @@ class MockSymbolsApi extends _i1.Mock implements _i2.SymbolsApi {
     required String? token,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#listSymbols, [], {#appId: appId, #token: token}),
-            returnValue: _i3.Future<bool>.value(false),
-          )
-          as _i3.Future<bool>);
+        Invocation.method(#listSymbols, [], {#appId: appId, #token: token}),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 
   @override
   _i3.Future<bool> deleteSymbols({
@@ -66,12 +64,11 @@ class MockSymbolsApi extends _i1.Mock implements _i2.SymbolsApi {
     required String? id,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#deleteSymbols, [], {
-              #appId: appId,
-              #token: token,
-              #id: id,
-            }),
-            returnValue: _i3.Future<bool>.value(false),
-          )
-          as _i3.Future<bool>);
+        Invocation.method(#deleteSymbols, [], {
+          #appId: appId,
+          #token: token,
+          #id: id,
+        }),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 }
