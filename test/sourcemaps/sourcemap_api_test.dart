@@ -10,13 +10,13 @@ import 'sourcemap_api_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() {
-  group('SourcemapsApi', () {
+  group('SourcemapApi', () {
     late MockClient mockClient;
-    late SourcemapsApi sourcemapsApi;
+    late SourcemapApi sourcemapApi;
 
     setUp(() {
       mockClient = MockClient();
-      sourcemapsApi = SourcemapsApi(httpClient: mockClient);
+      sourcemapApi = SourcemapApi(httpClient: mockClient);
     });
 
     group('uploadSourcemap', () {
@@ -32,7 +32,7 @@ void main() {
 
         when(mockClient.send(any)).thenAnswer((_) async => response);
 
-        final result = await sourcemapsApi.uploadSourcemap(
+        final result = await sourcemapApi.uploadSourcemap(
           appId: 'test-app-id',
           token: 'test-token',
           path: 'test_sourcemap.js.map',
@@ -57,7 +57,7 @@ void main() {
 
         when(mockClient.send(any)).thenAnswer((_) async => response);
 
-        final result = await sourcemapsApi.uploadSourcemap(
+        final result = await sourcemapApi.uploadSourcemap(
           appId: 'test-app-id',
           token: 'test-token',
           path: 'test_sourcemap.js.map',
@@ -70,7 +70,7 @@ void main() {
       });
 
       test('returns false when file does not exist', () async {
-        final result = await sourcemapsApi.uploadSourcemap(
+        final result = await sourcemapApi.uploadSourcemap(
           appId: 'test-app-id',
           token: 'test-token',
           path: 'nonexistent_sourcemap.js.map',

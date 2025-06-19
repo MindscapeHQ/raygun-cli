@@ -11,7 +11,7 @@ class SourcemapSingleFile extends SourcemapBase {
   });
 
   @override
-  Future<void> upload() async {
+  Future<bool> upload() async {
     if (!command.wasParsed('uri')) {
       print('Missing "uri"');
       exit(2);
@@ -34,16 +34,11 @@ class SourcemapSingleFile extends SourcemapBase {
       print('uri: $uri');
     }
 
-    final out = await sourcemapsApi.uploadSourcemap(
+    return await sourcemapApi.uploadSourcemap(
       appId: appId,
       token: token,
       path: path,
       uri: uri,
     );
-    if (out) {
-      exit(0);
-    } else {
-      exit(2);
-    }
   }
 }

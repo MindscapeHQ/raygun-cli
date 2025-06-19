@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:raygun_cli/src/core/raygun_api.dart';
 
-class SourcemapsApi {
-  const SourcemapsApi({
+class SourcemapApi {
+  const SourcemapApi({
     required this.httpClient,
   });
 
-  /// Creates a new instance of [SourcemapsApi] with the provided [httpClient].
-  SourcemapsApi.create() : httpClient = http.Client();
+  /// Creates a new instance of [SourcemapApi] with the provided [httpClient].
+  SourcemapApi.create() : httpClient = http.Client();
 
   final http.Client httpClient;
 

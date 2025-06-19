@@ -28,7 +28,7 @@ ArgParser buildParser() {
     )
     ..addCommand(
       symbolsCommand.name,
-      symbolsCommand.buildParserSymbols(),
+      symbolsCommand.buildParser(),
     )
     ..addCommand(
       kDeploymentsCommand,

@@ -11,7 +11,7 @@ class SourcemapFlutter extends SourcemapBase {
   });
 
   @override
-  Future<void> upload() async {
+  Future<bool> upload() async {
     if (command.option('uri') == null && command.option('base-uri') == null) {
       print('Provide either "uri" or "base-uri"');
       exit(2);
@@ -27,16 +27,11 @@ class SourcemapFlutter extends SourcemapBase {
       print('input-map: $path');
       print('uri: $uri');
     }
-    final out = await sourcemapsApi.uploadSourcemap(
+    return await sourcemapApi.uploadSourcemap(
       appId: appId,
       token: token,
       path: path,
       uri: uri,
     );
-    if (out) {
-      exit(0);
-    } else {
-      exit(2);
-    }
   }
 }
