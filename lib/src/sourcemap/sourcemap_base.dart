@@ -6,7 +6,8 @@ abstract class SourcemapBase {
   SourcemapBase({
     required this.command,
     required this.verbose,
-  }) : sourcemapApi = SourcemapApi.create();
+    required this.api,
+  });
 
   /// Command line arguments
   final ArgResults command;
@@ -14,7 +15,7 @@ abstract class SourcemapBase {
   /// Print verbose output
   final bool verbose;
 
-  late SourcemapApi sourcemapApi;
+  final SourcemapApi api;
 
   /// Uploads the sourcemap
   Future<bool> upload();

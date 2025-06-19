@@ -8,6 +8,7 @@ class SourcemapFlutter extends SourcemapBase {
   SourcemapFlutter({
     required super.command,
     required super.verbose,
+    required super.api,
   });
 
   @override
@@ -27,7 +28,7 @@ class SourcemapFlutter extends SourcemapBase {
       print('input-map: $path');
       print('uri: $uri');
     }
-    return await sourcemapApi.uploadSourcemap(
+    return await api.uploadSourcemap(
       appId: appId,
       token: token,
       path: path,

@@ -8,6 +8,7 @@ class SourcemapSingleFile extends SourcemapBase {
   SourcemapSingleFile({
     required super.command,
     required super.verbose,
+    required super.api,
   });
 
   @override
@@ -34,7 +35,7 @@ class SourcemapSingleFile extends SourcemapBase {
       print('uri: $uri');
     }
 
-    return await sourcemapApi.uploadSourcemap(
+    return await api.uploadSourcemap(
       appId: appId,
       token: token,
       path: path,

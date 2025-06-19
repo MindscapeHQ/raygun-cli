@@ -103,16 +103,19 @@ class SourcemapCommand extends RaygunCommand {
         return SourcemapSingleFile(
           command: command,
           verbose: verbose,
+          api: api,
         ).upload();
       case 'flutter':
         return SourcemapFlutter(
           command: command,
           verbose: verbose,
+          api: api,
         ).upload();
       case 'node':
         return SourcemapNode(
           command: command,
           verbose: verbose,
+          api: api,
         ).upload();
       default:
         print('Unsupported platform');
