@@ -1,50 +1,44 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:raygun_cli/src/core/raygun_api.dart';
 
-/// Uploads a sourcemap file to Raygun.
-/// returns true if the upload was successful.
-Future<bool> uploadSourcemap({
-  required String appId,
-  required String token,
-  required String path,
-  required String uri,
-}) async {
-  final file = File(path);
-  if (!file.existsSync()) {
-    print('$path: file not found!');
-    return false;
-  }
-  print('Uploading: $path');
-
-  // curl -X PUT 'https://api.raygun.com/v3/applications/{your-application-identifier}/source-maps' \
-  // -H 'Authorization: Bearer YOUR_PERSONAL_ACCESS_TOKEN' \
-  // -H 'Content-Type: multipart/form-data' \
-  // -F 'file=@path_to_your_source_map_file.map' \
-  // -F 'uri=your_source_map_uri'
-
-  final url = 'https://api.raygun.com/v3/applications/$appId/source-maps';
-  final request = http.MultipartRequest('PUT', Uri.parse(url));
-  request.headers.addAll({
-    'Authorization': 'Bearer $token',
-    'Content-Type': 'multipart/form-data',
+class SourcemapsApi {
+  const SourcemapsApi({
+    required this.httpClient,
   });
-  request.files.add(
-    http.MultipartFile(
-      'file',
-      file.readAsBytes().asStream(),
-      file.lengthSync(),
-      filename: path.split("/").last,
-    ),
-  );
-  request.fields.addAll({
-    'uri': uri,
-  });
-  final res = await request.send();
-  if (res.statusCode == 200) {
-    print('File uploaded succesfully!');
-    return true;
-  } else {
-    print('Error uploading file. Response code: ${res.statusCode}');
-    return false;
+
+  /// Creates a new instance of [SourcemapsApi] with the provided [httpClient].
+  SourcemapsApi.create() : httpClient = http.Client();
+
+  final http.Client httpClient;
+
+  /// Uploads a sourcemap file to Raygun.
+  /// returns true if the upload was successful.
+  Future<bool> uploadSourcemap({
+    required String appId,
+    required String token,
+    required String path,
+    required String uri,
+  }) async {
+    final file = File(path);
+    if (!file.existsSync()) {
+      print('$path: file not found!');
+      return false;
+    }
+    print('Uploading: $path');
+
+    final request = RaygunMultipartRequestBuilder(
+      'https://api.raygun.com/v3/applications/$appId/source-maps',
+      'PUT',
+    ).addBearerToken(token).addField('uri', uri).addFile('file', path).build();
+
+    final response = await httpClient.send(request);
+    if (response.statusCode == 200) {
+      print('File uploaded succesfully!');
+      return true;
+    } else {
+      print('Error uploading file. Response code: ${response.statusCode}');
+      return false;
+    }
   }
 }
