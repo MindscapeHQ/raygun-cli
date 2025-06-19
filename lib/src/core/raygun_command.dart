@@ -7,11 +7,5 @@ abstract class RaygunCommand {
 
   void execute(ArgResults command, bool verbose);
 
-  Future<bool> run({
-    required ArgResults command,
-    required String appId,
-    required String token,
-  });
-
-  ArgParser buildParserSymbols();
+  ArgParser buildParser();
 }

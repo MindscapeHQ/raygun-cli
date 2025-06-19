@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:raygun_cli/src/config_props.dart';
-import 'package:raygun_cli/src/sourcemap/sourcemap_api.dart';
 import 'package:raygun_cli/src/sourcemap/sourcemap_base.dart';
 
 /// Uploads a single sourcemap file to Raygun.
@@ -9,10 +8,11 @@ class SourcemapSingleFile extends SourcemapBase {
   SourcemapSingleFile({
     required super.command,
     required super.verbose,
+    required super.api,
   });
 
   @override
-  Future<void> upload() async {
+  Future<bool> upload() async {
     if (!command.wasParsed('uri')) {
       print('Missing "uri"');
       exit(2);
@@ -35,16 +35,11 @@ class SourcemapSingleFile extends SourcemapBase {
       print('uri: $uri');
     }
 
-    final out = await uploadSourcemap(
+    return await api.uploadSourcemap(
       appId: appId,
       token: token,
       path: path,
       uri: uri,
     );
-    if (out) {
-      exit(0);
-    } else {
-      exit(2);
-    }
   }
 }

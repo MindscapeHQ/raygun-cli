@@ -21,7 +21,7 @@ class SymbolsCommand extends RaygunCommand {
   void execute(ArgResults command, bool verbose) {
     if (command.wasParsed('help')) {
       print('Usage: raygun-cli $name (upload|list|delete) <arguments>');
-      print(buildParserSymbols().usage);
+      print(buildParser().usage);
       exit(0);
     }
     run(
@@ -40,7 +40,6 @@ class SymbolsCommand extends RaygunCommand {
     });
   }
 
-  @override
   Future<bool> run({
     required ArgResults command,
     required String appId,
@@ -49,7 +48,7 @@ class SymbolsCommand extends RaygunCommand {
     if (command.command?.name == 'upload') {
       if (!command.wasParsed('path') || !command.wasParsed('version')) {
         print('Missing mandatory arguments');
-        print(buildParserSymbols().usage);
+        print(buildParser().usage);
         return false;
       }
       final path = command['path'];
@@ -72,7 +71,7 @@ class SymbolsCommand extends RaygunCommand {
     if (command.command?.name == 'delete') {
       if (!command.wasParsed('id')) {
         print('Missing mandatory arguments');
-        print(buildParserSymbols().usage);
+        print(buildParser().usage);
         return false;
       }
       return api.deleteSymbols(
@@ -86,7 +85,7 @@ class SymbolsCommand extends RaygunCommand {
   }
 
   @override
-  ArgParser buildParserSymbols() {
+  ArgParser buildParser() {
     return ArgParser()
       ..addFlag(
         'help',
