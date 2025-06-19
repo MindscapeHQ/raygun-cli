@@ -23,8 +23,8 @@ ArgParser buildParser() {
       help: 'Print the tool version.',
     )
     ..addCommand(
-      kSourcemapCommand,
-      buildParserSourcemap(),
+      sourcemapCommand.name,
+      sourcemapCommand.buildParser(),
     )
     ..addCommand(
       symbolsCommand.name,
@@ -71,8 +71,8 @@ void main(List<String> arguments) {
       verbose = true;
     }
 
-    if (results.command?.name == kSourcemapCommand) {
-      parseSourcemapCommand(results.command!, verbose);
+    if (results.command?.name == sourcemapCommand.name) {
+      sourcemapCommand.execute(results.command!, verbose);
       return;
     }
 
