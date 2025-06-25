@@ -35,8 +35,8 @@ ArgParser buildParser() {
       buildParserDeployments(),
     )
     ..addCommand(
-      kProguardCommand,
-      buildParserProguard(),
+      proguardCommand.name,
+      proguardCommand.buildParser(),
     );
 }
 
