@@ -57,7 +57,8 @@ void main() {
         )).called(1);
       });
 
-      test('upload calls uploadProguardMapping without overwrite when flag not set',
+      test(
+          'upload calls uploadProguardMapping without overwrite when flag not set',
           () async {
         when(mockApi.uploadProguardMapping(
           appId: anyNamed('appId'),
@@ -145,13 +146,11 @@ void main() {
         ));
       });
 
-      test('upload returns false when external-access-token is missing', () async {
+      test('upload returns false when external-access-token is missing',
+          () async {
         final parser = command.buildParser();
-        final results = parser.parse([
-          '--app-id=test-app-id',
-          '--path=test.txt',
-          '--version=1.0.0'
-        ]);
+        final results = parser.parse(
+            ['--app-id=test-app-id', '--path=test.txt', '--version=1.0.0']);
 
         proguard = Proguard(
           command: results,

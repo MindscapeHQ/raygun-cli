@@ -25,7 +25,7 @@ import 'package:raygun_cli/src/proguard/proguard_api.dart' as _i3;
 
 class _FakeClient_0 extends _i1.SmartFake implements _i2.Client {
   _FakeClient_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
 /// A class which mocks [ProguardApi].
@@ -37,12 +37,10 @@ class MockProguardApi extends _i1.Mock implements _i3.ProguardApi {
   }
 
   @override
-  _i2.Client get httpClient =>
-      (super.noSuchMethod(
-            Invocation.getter(#httpClient),
-            returnValue: _FakeClient_0(this, Invocation.getter(#httpClient)),
-          )
-          as _i2.Client);
+  _i2.Client get httpClient => (super.noSuchMethod(
+        Invocation.getter(#httpClient),
+        returnValue: _FakeClient_0(this, Invocation.getter(#httpClient)),
+      ) as _i2.Client);
 
   @override
   _i4.Future<bool> uploadProguardMapping({
@@ -53,14 +51,13 @@ class MockProguardApi extends _i1.Mock implements _i3.ProguardApi {
     required bool? overwrite,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#uploadProguardMapping, [], {
-              #appId: appId,
-              #externalAccessToken: externalAccessToken,
-              #path: path,
-              #version: version,
-              #overwrite: overwrite,
-            }),
-            returnValue: _i4.Future<bool>.value(false),
-          )
-          as _i4.Future<bool>);
+        Invocation.method(#uploadProguardMapping, [], {
+          #appId: appId,
+          #externalAccessToken: externalAccessToken,
+          #path: path,
+          #version: version,
+          #overwrite: overwrite,
+        }),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
 }

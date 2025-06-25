@@ -48,7 +48,8 @@ void main() {
         testFile.deleteSync();
       });
 
-      test('returns true when upload is successful with overwrite flag', () async {
+      test('returns true when upload is successful with overwrite flag',
+          () async {
         final testFile = File('test_mapping.txt');
         testFile.writeAsStringSync('test proguard mapping content');
 

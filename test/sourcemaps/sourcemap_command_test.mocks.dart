@@ -25,7 +25,7 @@ import 'package:raygun_cli/src/sourcemap/sourcemap_api.dart' as _i3;
 
 class _FakeClient_0 extends _i1.SmartFake implements _i2.Client {
   _FakeClient_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
 /// A class which mocks [SourcemapApi].
@@ -37,12 +37,10 @@ class MockSourcemapApi extends _i1.Mock implements _i3.SourcemapApi {
   }
 
   @override
-  _i2.Client get httpClient =>
-      (super.noSuchMethod(
-            Invocation.getter(#httpClient),
-            returnValue: _FakeClient_0(this, Invocation.getter(#httpClient)),
-          )
-          as _i2.Client);
+  _i2.Client get httpClient => (super.noSuchMethod(
+        Invocation.getter(#httpClient),
+        returnValue: _FakeClient_0(this, Invocation.getter(#httpClient)),
+      ) as _i2.Client);
 
   @override
   _i4.Future<bool> uploadSourcemap({
@@ -52,13 +50,12 @@ class MockSourcemapApi extends _i1.Mock implements _i3.SourcemapApi {
     required String? uri,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#uploadSourcemap, [], {
-              #appId: appId,
-              #token: token,
-              #path: path,
-              #uri: uri,
-            }),
-            returnValue: _i4.Future<bool>.value(false),
-          )
-          as _i4.Future<bool>);
+        Invocation.method(#uploadSourcemap, [], {
+          #appId: appId,
+          #token: token,
+          #path: path,
+          #uri: uri,
+        }),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
 }
