@@ -58,6 +58,13 @@ void main(List<String> arguments) {
   try {
     final ArgResults results = argParser.parse(arguments);
     bool verbose = false;
+    if (results.wasParsed('verbose')) {
+      verbose = true;
+    }
+
+    if (verbose) {
+      print('[VERBOSE] All arguments: ${results.arguments}');
+    }
 
     if (results.wasParsed('help') || arguments.isEmpty) {
       printUsage(argParser);
@@ -66,9 +73,6 @@ void main(List<String> arguments) {
     if (results.wasParsed('version')) {
       print('raygun-cli version: $version');
       return;
-    }
-    if (results.wasParsed('verbose')) {
-      verbose = true;
     }
 
     if (results.command?.name == sourcemapCommand.name) {
@@ -91,12 +95,10 @@ void main(List<String> arguments) {
       return;
     }
 
-    if (verbose) {
-      print('[VERBOSE] All arguments: ${results.arguments}');
-    }
+    throw FormatException('Unknown or missing command.');
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
-    print(e.message);
+    print('Error: ${e.message}');
     print('');
     printUsage(argParser);
   }
