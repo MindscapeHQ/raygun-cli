@@ -31,8 +31,8 @@ ArgParser buildParser() {
       symbolsCommand.buildParser(),
     )
     ..addCommand(
-      kDeploymentsCommand,
-      buildParserDeployments(),
+      deploymentsCommand.name,
+      deploymentsCommand.buildParser(),
     )
     ..addCommand(
       proguardCommand.name,
@@ -81,8 +81,8 @@ void main(List<String> arguments) {
       return;
     }
 
-    if (results.command?.name == kDeploymentsCommand) {
-      parseDeploymentsCommand(results.command!, verbose);
+    if (results.command?.name == deploymentsCommand.name) {
+      deploymentsCommand.execute(results.command!, verbose);
       return;
     }
 

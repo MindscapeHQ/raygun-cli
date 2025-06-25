@@ -1,25 +1,25 @@
-import 'dart:io';
-
-import 'package:raygun_cli/src/deployments/deployments_api.dart';
 import 'package:args/args.dart';
+import 'package:raygun_cli/src/deployments/deployments_api.dart';
 import '../config_props.dart';
 
 /// Deployments command
 class Deployments {
   final ArgResults command;
   final bool verbose;
+  final DeploymentsApi deploymentsApi;
 
   Deployments({
     required this.command,
     required this.verbose,
+    required this.deploymentsApi,
   });
 
   /// Notifies Raygun that a new deployment has been made.
-  Future<void> notify() async {
+  Future<bool> notify() async {
     if (!command.wasParsed('version')) {
       print('Error: Missing "--version"');
       print('  Please provide "--version" via argument');
-      exit(2);
+      return false;
     }
 
     final version = command.option('version') as String;
@@ -42,7 +42,7 @@ class Deployments {
       print('scm-type: $scmType');
     }
 
-    final success = await createDeployment(
+    final success = await deploymentsApi.createDeployment(
       token: token,
       apiKey: apiKey,
       version: version,
@@ -55,10 +55,10 @@ class Deployments {
 
     if (success) {
       print('Deployment created successfully');
-      exit(0);
+      return true;
     } else {
       print('Failed to create deployment');
-      exit(2);
+      return false;
     }
   }
 }
