@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:raygun_cli/src/proguard/proguard_api.dart';
 import 'package:args/args.dart';
 import '../config_props.dart';
@@ -7,29 +5,31 @@ import '../config_props.dart';
 class Proguard {
   final ArgResults command;
   final bool verbose;
+  final ProguardApi api;
 
   Proguard({
     required this.command,
     required this.verbose,
+    required this.api,
   });
 
-  Future<void> upload() async {
+  Future<bool> upload() async {
     if (!command.wasParsed('path')) {
       print('Error: Missing "--path"');
       print('  Please provide "--path" via argument');
-      exit(2);
+      return false;
     }
 
     if (!command.wasParsed('version')) {
       print('Error: Missing "--version"');
       print('  Please provide "--version" via argument');
-      exit(2);
+      return false;
     }
 
     if (!command.wasParsed('external-access-token')) {
       print('Error: Missing "--external-access-token"');
       print('  Please provide "--external-access-token" via argument');
-      exit(2);
+      return false;
     }
 
     final externalAccessToken =
@@ -47,7 +47,7 @@ class Proguard {
       print('overwrite: $overwrite');
     }
 
-    final success = await uploadProguardMapping(
+    final success = await api.uploadProguardMapping(
       appId: appId,
       externalAccessToken: externalAccessToken,
       path: path,
@@ -55,10 +55,6 @@ class Proguard {
       overwrite: overwrite,
     );
 
-    if (success) {
-      exit(0);
-    } else {
-      exit(2);
-    }
+    return success;
   }
 }
