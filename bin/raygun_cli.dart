@@ -35,8 +35,8 @@ ArgParser buildParser() {
       buildParserDeployments(),
     )
     ..addCommand(
-      kProguardCommand,
-      buildParserProguard(),
+      proguardCommand.name,
+      proguardCommand.buildParser(),
     );
 }
 
@@ -86,8 +86,8 @@ void main(List<String> arguments) {
       return;
     }
 
-    if (results.command?.name == kProguardCommand) {
-      parseProguardCommand(results.command!, verbose);
+    if (results.command?.name == proguardCommand.name) {
+      proguardCommand.execute(results.command!, verbose);
       return;
     }
 
