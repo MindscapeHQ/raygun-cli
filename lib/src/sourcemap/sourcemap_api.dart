@@ -34,7 +34,7 @@ class SourcemapApi {
 
     final response = await httpClient.send(request);
     if (response.statusCode == 200) {
-      print('File uploaded succesfully!');
+      print('File uploaded successfully!');
       return true;
     } else {
       print('Error uploading file. Response code: ${response.statusCode}');
