@@ -16,11 +16,7 @@ class SourcemapNode extends SourcemapBase {
 
     // TODO: search for all map files in source folder and upload them.
 
-<<<<<<< final-refactor -- Incoming Change
-    print('Comming soon!');
-=======
     print('Coming soon!');
->>>>>>> main -- Current Change
     return false;
   }
 }
