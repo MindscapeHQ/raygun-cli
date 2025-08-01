@@ -13,18 +13,29 @@ void main() {
   group('SourcemapApi', () {
     late MockClient mockClient;
     late SourcemapApi sourcemapApi;
+    late File testFile;
 
     setUp(() {
       mockClient = MockClient();
       sourcemapApi = SourcemapApi(httpClient: mockClient);
+      // Create a temporary test file
+      testFile = File('test_sourcemap.js.map');
+      testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
+    });
+
+    tearDown(() {
+      // Clean up the test file after all tests
+      try {
+        if (testFile.existsSync()) {
+          testFile.deleteSync();
+        }
+      } catch (e) {
+        // Ignore if the file cannot be deleted
+      }
     });
 
     group('uploadSourcemap', () {
       test('returns true when upload is successful (200)', () async {
-        // Create a temporary test file
-        final testFile = File('test_sourcemap.js.map');
-        testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
-
         final response = http.StreamedResponse(
           Stream.value([]),
           200,
@@ -35,21 +46,15 @@ void main() {
         final result = await sourcemapApi.uploadSourcemap(
           appId: 'test-app-id',
           token: 'test-token',
-          path: 'test_sourcemap.js.map',
+          path: testFile.path,
           uri: 'https://example.com/app.js',
         );
 
         expect(result, true);
         verify(mockClient.send(any)).called(1);
-
-        // Clean up
-        testFile.deleteSync();
       });
 
       test('returns false when upload fails', () async {
-        final testFile = File('test_sourcemap.js.map');
-        testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
-
         final response = http.StreamedResponse(
           Stream.value([]),
           400,
@@ -60,13 +65,11 @@ void main() {
         final result = await sourcemapApi.uploadSourcemap(
           appId: 'test-app-id',
           token: 'test-token',
-          path: 'test_sourcemap.js.map',
+          path: testFile.path,
           uri: 'https://example.com/app.js',
         );
 
         expect(result, false);
-
-        testFile.deleteSync();
       });
 
       test('returns false when file does not exist', () async {
