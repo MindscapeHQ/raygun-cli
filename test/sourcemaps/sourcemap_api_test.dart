@@ -20,11 +20,26 @@ void main() {
     });
 
     group('uploadSourcemap', () {
-      test('returns true when upload is successful (200)', () async {
-        // Create a temporary test file
-        final testFile = File('test_sourcemap.js.map');
-        testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
+      late File testFile;
 
+      setUpAll(() {
+        // Create a temporary test file
+        testFile = File('test_sourcemap.js.map');
+        testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
+      });
+
+      tearDownAll(() {
+        // Clean up the test file after all tests
+        try {
+          if (testFile.existsSync()) {
+            testFile.deleteSync();
+          }
+        } catch (e) {
+          // Ignore if the file cannot be deleted
+        }
+      });
+
+      test('returns true when upload is successful (200)', () async {
         final response = http.StreamedResponse(
           Stream.value([]),
           200,
@@ -41,15 +56,9 @@ void main() {
 
         expect(result, true);
         verify(mockClient.send(any)).called(1);
-
-        // Clean up
-        testFile.deleteSync();
       });
 
       test('returns false when upload fails', () async {
-        final testFile = File('test_sourcemap.js.map');
-        testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
-
         final response = http.StreamedResponse(
           Stream.value([]),
           400,
@@ -65,8 +74,6 @@ void main() {
         );
 
         expect(result, false);
-
-        testFile.deleteSync();
       });
 
       test('returns false when file does not exist', () async {
