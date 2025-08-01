@@ -12,18 +12,29 @@ void main() {
   group('SourcemapCommand', () {
     late MockSourcemapApi mockApi;
     late SourcemapCommand command;
+    late File testFile;
 
     setUp(() {
       mockApi = MockSourcemapApi();
       command = SourcemapCommand(api: mockApi);
+      // Create a temporary test file
+      testFile = File('test_sourcemap.js.map');
+      testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
+    });
+
+    tearDown(() {
+      // Clean up the test file after all tests
+      try {
+        if (testFile.existsSync()) {
+          testFile.deleteSync();
+        }
+      } catch (e) {
+        // Ignore if the file cannot be deleted
+      }
     });
 
     group('run', () {
       test('handles single file upload (platform null)', () async {
-        // Create a temporary test file
-        final testFile = File('test_sourcemap.js.map');
-        testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
-
         when(mockApi.uploadSourcemap(
           appId: anyNamed('appId'),
           token: anyNamed('token'),
@@ -39,7 +50,7 @@ void main() {
           '--app-id=test-app-id',
           '--token=test-token',
           '--uri=http://test.com/app.js',
-          '--input-map=test_sourcemap.js.map'
+          '--input-map=${testFile.path}',
         ]);
 
         final result = await command.run(
@@ -51,12 +62,9 @@ void main() {
         verify(mockApi.uploadSourcemap(
           appId: 'test-app-id',
           token: 'test-token',
-          path: 'test_sourcemap.js.map',
+          path: testFile.path,
           uri: 'http://test.com/app.js',
         )).called(1);
-
-        // Clean up
-        testFile.deleteSync();
       });
 
       test('handles flutter platform upload', () async {

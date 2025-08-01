@@ -13,32 +13,28 @@ void main() {
   group('SourcemapApi', () {
     late MockClient mockClient;
     late SourcemapApi sourcemapApi;
+    late File testFile;
 
     setUp(() {
       mockClient = MockClient();
       sourcemapApi = SourcemapApi(httpClient: mockClient);
+      // Create a temporary test file
+      testFile = File('test_sourcemap.js.map');
+      testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
+    });
+
+    tearDown(() {
+      // Clean up the test file after all tests
+      try {
+        if (testFile.existsSync()) {
+          testFile.deleteSync();
+        }
+      } catch (e) {
+        // Ignore if the file cannot be deleted
+      }
     });
 
     group('uploadSourcemap', () {
-      late File testFile;
-
-      setUpAll(() {
-        // Create a temporary test file
-        testFile = File('test_sourcemap.js.map');
-        testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
-      });
-
-      tearDownAll(() {
-        // Clean up the test file after all tests
-        try {
-          if (testFile.existsSync()) {
-            testFile.deleteSync();
-          }
-        } catch (e) {
-          // Ignore if the file cannot be deleted
-        }
-      });
-
       test('returns true when upload is successful (200)', () async {
         final response = http.StreamedResponse(
           Stream.value([]),
@@ -50,7 +46,7 @@ void main() {
         final result = await sourcemapApi.uploadSourcemap(
           appId: 'test-app-id',
           token: 'test-token',
-          path: 'test_sourcemap.js.map',
+          path: testFile.path,
           uri: 'https://example.com/app.js',
         );
 
@@ -69,7 +65,7 @@ void main() {
         final result = await sourcemapApi.uploadSourcemap(
           appId: 'test-app-id',
           token: 'test-token',
-          path: 'test_sourcemap.js.map',
+          path: testFile.path,
           uri: 'https://example.com/app.js',
         );
 
