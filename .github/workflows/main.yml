@@ -24,7 +24,7 @@ jobs:
         run: dart analyze
 
       - name: Run tests
-        run: flutter test
+        run: dart test
 
   build-linux:
     runs-on: ubuntu-latest
