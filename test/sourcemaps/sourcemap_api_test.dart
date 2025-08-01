@@ -20,7 +20,6 @@ void main() {
     });
 
     group('uploadSourcemap', () {
-
       late File testFile;
 
       setUpAll(() {
@@ -28,7 +27,7 @@ void main() {
         testFile = File('test_sourcemap.js.map');
         testFile.writeAsStringSync('{"version": 3, "sources": ["test.js"]}');
       });
-      
+
       tearDownAll(() {
         // Clean up the test file after all tests
         try {
