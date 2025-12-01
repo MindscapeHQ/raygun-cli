@@ -152,6 +152,44 @@ Response:
 
 ```
 
+#### iOS dSYM Uploader
+
+Upload dSYM files for iOS to [raygun.com](https://raygun.com).
+
+Documentation: https://raygun.com/documentation/language-guides/apple/crash-reporting/advanced-setup/#symbolication
+
+```
+raygun-cli dsym <arguments>
+```
+
+Minimal required arguments are:
+
+```
+raygun-cli dsym --app-id=APP_ID --path=<Path to dSYM zip file> --external-access-token=<EAT from your Raygun user account settings>
+```
+
+Example outputs:
+
+```
+Success:
+
+Uploading: <somewhere>/app.dSYM.zip
+Success uploading dSYM file: 200
+Result: {"Status":"Success","Message":"dSYM files uploaded"}
+
+Wrong External Access Token:
+
+Uploading: <somewhere>/app.dSYM.zip
+Error uploading dSYM file: 302
+Response: 
+
+Invalid dSYM file:
+
+Uploading: <somewhere>/invalid.zip
+Success uploading dSYM file: 200
+Result: {"Status":"Failure","Message":"No dSYM file found"}
+```
+
 #### Flutter obfuscation symbols
 
 Manages obfuscation symbols to [raygun.com](https://raygun.com).

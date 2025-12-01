@@ -37,6 +37,10 @@ ArgParser buildParser() {
     ..addCommand(
       proguardCommand.name,
       proguardCommand.buildParser(),
+    )
+    ..addCommand(
+      dsymCommand.name,
+      dsymCommand.buildParser(),
     );
 }
 
@@ -92,6 +96,11 @@ void main(List<String> arguments) {
 
     if (results.command?.name == proguardCommand.name) {
       proguardCommand.execute(results.command!, verbose);
+      return;
+    }
+
+    if (results.command?.name == dsymCommand.name) {
+      dsymCommand.execute(results.command!, verbose);
       return;
     }
 

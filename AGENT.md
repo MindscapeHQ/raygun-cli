@@ -13,7 +13,7 @@
 ## Architecture
 - **CLI Tool**: Uploads sourcemaps, manages obfuscation symbols, tracks deployments for Raygun.com
 - **Main Entry**: `bin/raygun_cli.dart` - CLI argument parsing and command routing
-- **Commands**: `lib/src/` - Four main command modules: sourcemap, symbols, deployments, proguard
+- **Commands**: `lib/src/` - Five main command modules: sourcemap, symbols, deployments, proguard, dsym
 - **APIs**: Each command has corresponding API client (`*_api.dart`) for Raygun REST API calls
 - **Config**: `config_props.dart` handles arg parsing with env var fallbacks (RAYGUN_APP_ID, RAYGUN_TOKEN, RAYGUN_API_KEY)
 
@@ -311,6 +311,12 @@ dart run bin/raygun_cli.dart proguard \
   --path=mapping.txt \
   --external-access-token=EAT \
   --overwrite
+
+# iOS dSYM upload
+dart run bin/raygun_cli.dart dsym \
+  --app-id=XXX \
+  --path=path/to/dsym.zip \
+  --external-access-token=EAT
 ```
 
 ### Environment Variables
