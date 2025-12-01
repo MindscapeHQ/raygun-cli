@@ -10,8 +10,10 @@ void main() {
         ..addFlag('verbose')
         ..addOption('app-id')
         ..addOption('token');
-      final results =
-          parser.parse(['--app-id=app-id-parsed', '--token=token-parsed']);
+      final results = parser.parse([
+        '--app-id=app-id-parsed',
+        '--token=token-parsed',
+      ]);
       final token = ConfigProp.token.load(results);
       final appId = ConfigProp.appId.load(results);
       expect(appId, 'app-id-parsed');

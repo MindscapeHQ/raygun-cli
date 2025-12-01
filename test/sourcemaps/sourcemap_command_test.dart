@@ -35,12 +35,14 @@ void main() {
 
     group('run', () {
       test('handles single file upload (platform null)', () async {
-        when(mockApi.uploadSourcemap(
-          appId: anyNamed('appId'),
-          token: anyNamed('token'),
-          path: anyNamed('path'),
-          uri: anyNamed('uri'),
-        )).thenAnswer((_) async => true);
+        when(
+          mockApi.uploadSourcemap(
+            appId: anyNamed('appId'),
+            token: anyNamed('token'),
+            path: anyNamed('path'),
+            uri: anyNamed('uri'),
+          ),
+        ).thenAnswer((_) async => true);
 
         final parser = command.buildParser();
 
@@ -53,27 +55,28 @@ void main() {
           '--input-map=${testFile.path}',
         ]);
 
-        final result = await command.run(
-          command: results,
-          verbose: false,
-        );
+        final result = await command.run(command: results, verbose: false);
 
         expect(result, true);
-        verify(mockApi.uploadSourcemap(
-          appId: 'test-app-id',
-          token: 'test-token',
-          path: testFile.path,
-          uri: 'http://test.com/app.js',
-        )).called(1);
+        verify(
+          mockApi.uploadSourcemap(
+            appId: 'test-app-id',
+            token: 'test-token',
+            path: testFile.path,
+            uri: 'http://test.com/app.js',
+          ),
+        ).called(1);
       });
 
       test('handles flutter platform upload', () async {
-        when(mockApi.uploadSourcemap(
-          appId: anyNamed('appId'),
-          token: anyNamed('token'),
-          path: anyNamed('path'),
-          uri: anyNamed('uri'),
-        )).thenAnswer((_) async => true);
+        when(
+          mockApi.uploadSourcemap(
+            appId: anyNamed('appId'),
+            token: anyNamed('token'),
+            path: anyNamed('path'),
+            uri: anyNamed('uri'),
+          ),
+        ).thenAnswer((_) async => true);
 
         final parser = command.buildParser();
 
@@ -83,21 +86,20 @@ void main() {
           '--platform=flutter',
           '--app-id=test-app-id',
           '--token=test-token',
-          '--base-uri=http://test.com/'
+          '--base-uri=http://test.com/',
         ]);
 
-        final result = await command.run(
-          command: results,
-          verbose: false,
-        );
+        final result = await command.run(command: results, verbose: false);
 
         expect(result, true);
-        verify(mockApi.uploadSourcemap(
-          appId: 'test-app-id',
-          token: 'test-token',
-          path: 'build/web/main.dart.js.map',
-          uri: 'http://test.com/main.dart.js',
-        )).called(1);
+        verify(
+          mockApi.uploadSourcemap(
+            appId: 'test-app-id',
+            token: 'test-token',
+            path: 'build/web/main.dart.js.map',
+            uri: 'http://test.com/main.dart.js',
+          ),
+        ).called(1);
       });
 
       test('handles node platform (returns false - not implemented)', () async {
@@ -106,22 +108,21 @@ void main() {
           '--platform=node',
           '--app-id=test-app-id',
           '--token=test-token',
-          '--base-uri=http://test.com/'
+          '--base-uri=http://test.com/',
         ]);
 
-        final result = await command.run(
-          command: results,
-          verbose: false,
-        );
+        final result = await command.run(command: results, verbose: false);
 
         // The "node" platform is not implemented, so it should return false
         expect(result, false);
-        verifyNever(mockApi.uploadSourcemap(
-          appId: anyNamed('appId'),
-          token: anyNamed('token'),
-          path: anyNamed('path'),
-          uri: anyNamed('uri'),
-        ));
+        verifyNever(
+          mockApi.uploadSourcemap(
+            appId: anyNamed('appId'),
+            token: anyNamed('token'),
+            path: anyNamed('path'),
+            uri: anyNamed('uri'),
+          ),
+        );
       });
 
       test('returns false for unsupported platform', () async {
@@ -129,13 +130,10 @@ void main() {
         final results = parser.parse([
           '--platform=unsupported',
           '--app-id=test-app-id',
-          '--token=test-token'
+          '--token=test-token',
         ]);
 
-        final result = await command.run(
-          command: results,
-          verbose: false,
-        );
+        final result = await command.run(command: results, verbose: false);
 
         expect(result, false);
       });
@@ -144,10 +142,7 @@ void main() {
         final parser = command.buildParser();
         final results = parser.parse(['--help']);
 
-        final result = await command.run(
-          command: results,
-          verbose: false,
-        );
+        final result = await command.run(command: results, verbose: false);
 
         expect(result, false);
       });

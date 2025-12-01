@@ -48,30 +48,32 @@ void main() {
         testFile.deleteSync();
       });
 
-      test('returns true when upload is successful with overwrite flag',
-          () async {
-        final testFile = File('test_mapping.txt');
-        testFile.writeAsStringSync('test proguard mapping content');
+      test(
+        'returns true when upload is successful with overwrite flag',
+        () async {
+          final testFile = File('test_mapping.txt');
+          testFile.writeAsStringSync('test proguard mapping content');
 
-        final response = http.StreamedResponse(
-          Stream.value(utf8.encode('Upload successful')),
-          200,
-        );
+          final response = http.StreamedResponse(
+            Stream.value(utf8.encode('Upload successful')),
+            200,
+          );
 
-        when(mockClient.send(any)).thenAnswer((_) async => response);
+          when(mockClient.send(any)).thenAnswer((_) async => response);
 
-        final result = await proguardApi.uploadProguardMapping(
-          appId: 'test-app-id',
-          externalAccessToken: 'test-token',
-          path: 'test_mapping.txt',
-          version: '1.0.0',
-          overwrite: true,
-        );
+          final result = await proguardApi.uploadProguardMapping(
+            appId: 'test-app-id',
+            externalAccessToken: 'test-token',
+            path: 'test_mapping.txt',
+            version: '1.0.0',
+            overwrite: true,
+          );
 
-        expect(result, true);
+          expect(result, true);
 
-        testFile.deleteSync();
-      });
+          testFile.deleteSync();
+        },
+      );
 
       test('returns false when upload fails', () async {
         final testFile = File('test_mapping.txt');

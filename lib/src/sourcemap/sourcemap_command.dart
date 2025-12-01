@@ -7,13 +7,12 @@ import 'package:raygun_cli/src/sourcemap/node/sourcemap_node.dart';
 import 'package:raygun_cli/src/sourcemap/sourcemap_api.dart';
 import 'package:raygun_cli/src/sourcemap/sourcemap_single_file.dart';
 
-SourcemapCommand sourcemapCommand =
-    SourcemapCommand(api: SourcemapApi.create());
+SourcemapCommand sourcemapCommand = SourcemapCommand(
+  api: SourcemapApi.create(),
+);
 
 class SourcemapCommand extends RaygunCommand {
-  const SourcemapCommand({
-    required this.api,
-  });
+  const SourcemapCommand({required this.api});
 
   final SourcemapApi api;
 
@@ -29,14 +28,8 @@ class SourcemapCommand extends RaygunCommand {
         negatable: false,
         help: 'Print sourcemap usage information.',
       )
-      ..addOption(
-        'app-id',
-        help: 'Raygun application ID',
-      )
-      ..addOption(
-        'token',
-        help: 'Raygun access token',
-      )
+      ..addOption('app-id', help: 'Raygun application ID')
+      ..addOption('token', help: 'Raygun access token')
       ..addOption(
         'platform',
         abbr: 'p',
@@ -50,48 +43,33 @@ class SourcemapCommand extends RaygunCommand {
         'base-uri',
         help: 'Base application URI (e.g. https://localhost:3000/)',
       )
-      ..addOption(
-        'input-map',
-        abbr: 'i',
-        help: 'Single sourcemap file',
-      )
-      ..addOption(
-        'src',
-        abbr: 's',
-        help: 'Source files',
-      );
+      ..addOption('input-map', abbr: 'i', help: 'Single sourcemap file')
+      ..addOption('src', abbr: 's', help: 'Source files');
   }
 
   @override
-  void execute(
-    ArgResults command,
-    bool verbose,
-  ) {
+  void execute(ArgResults command, bool verbose) {
     if (command.wasParsed('help')) {
       print('Usage: raygun-cli $name (upload|list|delete) <arguments>');
       print(buildParser().usage);
       exit(0);
     }
 
-    run(
-      command: command,
-      verbose: verbose,
-    ).then((result) {
-      if (result) {
-        exit(0);
-      } else {
-        exit(2);
-      }
-    }).catchError((e) {
-      print('Error: $e');
-      exit(2);
-    });
+    run(command: command, verbose: verbose)
+        .then((result) {
+          if (result) {
+            exit(0);
+          } else {
+            exit(2);
+          }
+        })
+        .catchError((e) {
+          print('Error: $e');
+          exit(2);
+        });
   }
 
-  Future<bool> run({
-    required ArgResults command,
-    required bool verbose,
-  }) async {
+  Future<bool> run({required ArgResults command, required bool verbose}) async {
     if (command.wasParsed('help')) {
       print('Usage: raygun-cli sourcemap <arguments>');
       print(buildParser().usage);

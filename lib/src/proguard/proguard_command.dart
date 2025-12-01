@@ -5,8 +5,9 @@ import 'package:raygun_cli/src/core/raygun_command.dart';
 import 'package:raygun_cli/src/proguard/proguard.dart';
 import 'package:raygun_cli/src/proguard/proguard_api.dart';
 
-final ProguardCommand proguardCommand =
-    ProguardCommand(api: ProguardApi.create());
+final ProguardCommand proguardCommand = ProguardCommand(
+  api: ProguardApi.create(),
+);
 
 class ProguardCommand extends RaygunCommand {
   const ProguardCommand({required this.api});
@@ -25,11 +26,7 @@ class ProguardCommand extends RaygunCommand {
         negatable: false,
         help: 'Print proguard usage information',
       )
-      ..addOption(
-        'app-id',
-        mandatory: true,
-        help: 'Raygun application ID',
-      )
+      ..addOption('app-id', mandatory: true, help: 'Raygun application ID')
       ..addOption(
         'external-access-token',
         mandatory: true,
@@ -60,19 +57,18 @@ class ProguardCommand extends RaygunCommand {
       exit(0);
     }
 
-    Proguard(
-      command: command,
-      verbose: verbose,
-      api: api,
-    ).upload().then((success) {
-      if (success) {
-        exit(0);
-      } else {
-        exit(1);
-      }
-    }).catchError((error) {
-      print('Error uploading ProGuard mapping file: $error');
-      exit(2);
-    });
+    Proguard(command: command, verbose: verbose, api: api)
+        .upload()
+        .then((success) {
+          if (success) {
+            exit(0);
+          } else {
+            exit(1);
+          }
+        })
+        .catchError((error) {
+          print('Error uploading ProGuard mapping file: $error');
+          exit(2);
+        });
   }
 }

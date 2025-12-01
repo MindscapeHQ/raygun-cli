@@ -21,11 +21,13 @@ void main() {
 
     group('upload', () {
       test('upload calls uploadDsym with correct parameters', () async {
-        when(mockApi.uploadDsym(
-          appId: anyNamed('appId'),
-          externalAccessToken: anyNamed('externalAccessToken'),
-          path: anyNamed('path'),
-        )).thenAnswer((_) async => true);
+        when(
+          mockApi.uploadDsym(
+            appId: anyNamed('appId'),
+            externalAccessToken: anyNamed('externalAccessToken'),
+            path: anyNamed('path'),
+          ),
+        ).thenAnswer((_) async => true);
 
         final parser = command.buildParser();
         final results = parser.parse([
@@ -34,20 +36,18 @@ void main() {
           '--path=test.zip',
         ]);
 
-        dsym = Dsym(
-          command: results,
-          verbose: false,
-          api: mockApi,
-        );
+        dsym = Dsym(command: results, verbose: false, api: mockApi);
 
         final success = await dsym.upload();
 
         expect(success, true);
-        verify(mockApi.uploadDsym(
-          appId: 'test-app-id',
-          externalAccessToken: 'test-token',
-          path: 'test.zip',
-        )).called(1);
+        verify(
+          mockApi.uploadDsym(
+            appId: 'test-app-id',
+            externalAccessToken: 'test-token',
+            path: 'test.zip',
+          ),
+        ).called(1);
       });
 
       test('upload returns false when path is missing', () async {
@@ -57,45 +57,43 @@ void main() {
           '--external-access-token=test-token',
         ]);
 
-        dsym = Dsym(
-          command: results,
-          verbose: false,
-          api: mockApi,
-        );
+        dsym = Dsym(command: results, verbose: false, api: mockApi);
 
         final success = await dsym.upload();
 
         expect(success, false);
-        verifyNever(mockApi.uploadDsym(
-          appId: anyNamed('appId'),
-          externalAccessToken: anyNamed('externalAccessToken'),
-          path: anyNamed('path'),
-        ));
-      });
-
-      test('upload returns false when external-access-token is missing',
-          () async {
-        final parser = command.buildParser();
-        final results = parser.parse([
-          '--app-id=test-app-id',
-          '--path=test.zip',
-        ]);
-
-        dsym = Dsym(
-          command: results,
-          verbose: false,
-          api: mockApi,
+        verifyNever(
+          mockApi.uploadDsym(
+            appId: anyNamed('appId'),
+            externalAccessToken: anyNamed('externalAccessToken'),
+            path: anyNamed('path'),
+          ),
         );
-
-        final success = await dsym.upload();
-
-        expect(success, false);
-        verifyNever(mockApi.uploadDsym(
-          appId: anyNamed('appId'),
-          externalAccessToken: anyNamed('externalAccessToken'),
-          path: anyNamed('path'),
-        ));
       });
+
+      test(
+        'upload returns false when external-access-token is missing',
+        () async {
+          final parser = command.buildParser();
+          final results = parser.parse([
+            '--app-id=test-app-id',
+            '--path=test.zip',
+          ]);
+
+          dsym = Dsym(command: results, verbose: false, api: mockApi);
+
+          final success = await dsym.upload();
+
+          expect(success, false);
+          verifyNever(
+            mockApi.uploadDsym(
+              appId: anyNamed('appId'),
+              externalAccessToken: anyNamed('externalAccessToken'),
+              path: anyNamed('path'),
+            ),
+          );
+        },
+      );
     });
   });
 }

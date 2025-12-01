@@ -26,10 +26,7 @@ void main() {
         final testFile = File('test_symbols.txt');
         testFile.writeAsStringSync('test symbols content');
 
-        final response = http.StreamedResponse(
-          Stream.value([]),
-          200,
-        );
+        final response = http.StreamedResponse(Stream.value([]), 200);
 
         when(mockClient.send(any)).thenAnswer((_) async => response);
 
@@ -51,10 +48,7 @@ void main() {
         final testFile = File('test_symbols.txt');
         testFile.writeAsStringSync('test symbols content');
 
-        final response = http.StreamedResponse(
-          Stream.value([]),
-          201,
-        );
+        final response = http.StreamedResponse(Stream.value([]), 201);
 
         when(mockClient.send(any)).thenAnswer((_) async => response);
 
@@ -109,16 +103,8 @@ void main() {
     group('listSymbols', () {
       test('returns true and prints symbols when successful', () async {
         final symbolsResponse = [
-          {
-            'name': 'symbols1.txt',
-            'identifier': 'id1',
-            'version': '1.0.0',
-          },
-          {
-            'name': 'symbols2.txt',
-            'identifier': 'id2',
-            'version': '1.1.0',
-          },
+          {'name': 'symbols1.txt', 'identifier': 'id1', 'version': '1.0.0'},
+          {'name': 'symbols2.txt', 'identifier': 'id2', 'version': '1.1.0'},
         ];
 
         final response = http.StreamedResponse(
@@ -138,10 +124,7 @@ void main() {
       });
 
       test('returns false when list request fails', () async {
-        final response = http.StreamedResponse(
-          Stream.value([]),
-          401,
-        );
+        final response = http.StreamedResponse(Stream.value([]), 401);
 
         when(mockClient.send(any)).thenAnswer((_) async => response);
 
@@ -156,10 +139,7 @@ void main() {
 
     group('deleteSymbols', () {
       test('returns true when delete is successful', () async {
-        final response = http.StreamedResponse(
-          Stream.value([]),
-          204,
-        );
+        final response = http.StreamedResponse(Stream.value([]), 204);
 
         when(mockClient.send(any)).thenAnswer((_) async => response);
 
@@ -174,10 +154,7 @@ void main() {
       });
 
       test('returns false when delete fails', () async {
-        final response = http.StreamedResponse(
-          Stream.value([]),
-          404,
-        );
+        final response = http.StreamedResponse(Stream.value([]), 404);
 
         when(mockClient.send(any)).thenAnswer((_) async => response);
 

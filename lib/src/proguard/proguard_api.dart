@@ -43,7 +43,8 @@ class ProguardApi {
 
       if (response.statusCode == 200) {
         print(
-            'Success uploading Proguard/R8 mapping file: ${response.statusCode}');
+          'Success uploading Proguard/R8 mapping file: ${response.statusCode}',
+        );
         print('Result: $responseBody');
         return true;
       }

@@ -20,25 +20,27 @@ void main() {
     });
 
     group('createDeployment', () {
-      test('returns true when deployment creation is successful (201)',
-          () async {
-        final responseBody = jsonEncode({'identifier': 'test-deployment-id'});
-        final response = http.StreamedResponse(
-          Stream.value(utf8.encode(responseBody)),
-          201,
-        );
+      test(
+        'returns true when deployment creation is successful (201)',
+        () async {
+          final responseBody = jsonEncode({'identifier': 'test-deployment-id'});
+          final response = http.StreamedResponse(
+            Stream.value(utf8.encode(responseBody)),
+            201,
+          );
 
-        when(mockClient.send(any)).thenAnswer((_) async => response);
+          when(mockClient.send(any)).thenAnswer((_) async => response);
 
-        final result = await deploymentsApi.createDeployment(
-          token: 'test-token',
-          apiKey: 'test-api-key',
-          version: '1.0.0',
-        );
+          final result = await deploymentsApi.createDeployment(
+            token: 'test-token',
+            apiKey: 'test-api-key',
+            version: '1.0.0',
+          );
 
-        expect(result, true);
-        verify(mockClient.send(any)).called(1);
-      });
+          expect(result, true);
+          verify(mockClient.send(any)).called(1);
+        },
+      );
 
       test('returns true with all optional parameters', () async {
         final responseBody = jsonEncode({'identifier': 'test-deployment-id'});

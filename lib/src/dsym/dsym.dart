@@ -7,11 +7,7 @@ class Dsym {
   final bool verbose;
   final DsymApi api;
 
-  Dsym({
-    required this.command,
-    required this.verbose,
-    required this.api,
-  });
+  Dsym({required this.command, required this.verbose, required this.api});
 
   Future<bool> upload() async {
     if (!command.wasParsed('path')) {

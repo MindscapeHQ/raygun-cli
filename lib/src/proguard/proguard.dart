@@ -7,11 +7,7 @@ class Proguard {
   final bool verbose;
   final ProguardApi api;
 
-  Proguard({
-    required this.command,
-    required this.verbose,
-    required this.api,
-  });
+  Proguard({required this.command, required this.verbose, required this.api});
 
   Future<bool> upload() async {
     if (!command.wasParsed('path')) {

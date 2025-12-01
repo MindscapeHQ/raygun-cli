@@ -24,21 +24,13 @@ class DsymCommand extends RaygunCommand {
         negatable: false,
         help: 'Print dsym usage information',
       )
-      ..addOption(
-        'app-id',
-        mandatory: true,
-        help: 'Raygun application ID',
-      )
+      ..addOption('app-id', mandatory: true, help: 'Raygun application ID')
       ..addOption(
         'external-access-token',
         mandatory: true,
         help: 'Raygun external access token',
       )
-      ..addOption(
-        'path',
-        mandatory: true,
-        help: 'Path to the dSYM zip file',
-      );
+      ..addOption('path', mandatory: true, help: 'Path to the dSYM zip file');
   }
 
   @override
@@ -49,19 +41,18 @@ class DsymCommand extends RaygunCommand {
       exit(0);
     }
 
-    Dsym(
-      command: command,
-      verbose: verbose,
-      api: api,
-    ).upload().then((success) {
-      if (success) {
-        exit(0);
-      } else {
-        exit(1);
-      }
-    }).catchError((error) {
-      print('Error uploading dSYM file: $error');
-      exit(2);
-    });
+    Dsym(command: command, verbose: verbose, api: api)
+        .upload()
+        .then((success) {
+          if (success) {
+            exit(0);
+          } else {
+            exit(1);
+          }
+        })
+        .catchError((error) {
+          print('Error uploading dSYM file: $error');
+          exit(2);
+        });
   }
 }

@@ -8,9 +8,7 @@ import 'package:raygun_cli/src/symbols/symbols_api.dart';
 SymbolsCommand symbolsCommand = SymbolsCommand(api: SymbolsApi.create());
 
 class SymbolsCommand extends RaygunCommand {
-  const SymbolsCommand({
-    required this.api,
-  });
+  const SymbolsCommand({required this.api});
 
   final SymbolsApi api;
 
@@ -25,19 +23,21 @@ class SymbolsCommand extends RaygunCommand {
       exit(0);
     }
     run(
-      command: command,
-      appId: ConfigProp.appId.load(command),
-      token: ConfigProp.token.load(command),
-    ).then((result) {
-      if (result) {
-        exit(0);
-      } else {
-        exit(2);
-      }
-    }).catchError((e) {
-      print('Error: $e');
-      exit(2);
-    });
+          command: command,
+          appId: ConfigProp.appId.load(command),
+          token: ConfigProp.token.load(command),
+        )
+        .then((result) {
+          if (result) {
+            exit(0);
+          } else {
+            exit(2);
+          }
+        })
+        .catchError((e) {
+          print('Error: $e');
+          exit(2);
+        });
   }
 
   Future<bool> run({
@@ -62,10 +62,7 @@ class SymbolsCommand extends RaygunCommand {
     }
 
     if (command.command?.name == 'list') {
-      return api.listSymbols(
-        appId: appId,
-        token: token,
-      );
+      return api.listSymbols(appId: appId, token: token);
     }
 
     if (command.command?.name == 'delete') {
@@ -74,11 +71,7 @@ class SymbolsCommand extends RaygunCommand {
         print(buildParser().usage);
         return false;
       }
-      return api.deleteSymbols(
-        appId: appId,
-        token: token,
-        id: command['id'],
-      );
+      return api.deleteSymbols(appId: appId, token: token, id: command['id']);
     }
 
     return false;
@@ -93,34 +86,13 @@ class SymbolsCommand extends RaygunCommand {
         negatable: false,
         help: 'Print $name usage information.',
       )
-      ..addOption(
-        'app-id',
-        help: 'Raygun application ID',
-      )
-      ..addOption(
-        'token',
-        help: 'Raygun access token',
-      )
-      ..addOption(
-        'path',
-        help: 'Path to symbols file, used in upload',
-      )
-      ..addOption(
-        'version',
-        help: 'App version, used in upload',
-      )
-      ..addOption(
-        'id',
-        help: 'Symbol ID, used in delete',
-      )
-      ..addCommand(
-        'upload',
-      )
-      ..addCommand(
-        'list',
-      )
-      ..addCommand(
-        'delete',
-      );
+      ..addOption('app-id', help: 'Raygun application ID')
+      ..addOption('token', help: 'Raygun access token')
+      ..addOption('path', help: 'Path to symbols file, used in upload')
+      ..addOption('version', help: 'App version, used in upload')
+      ..addOption('id', help: 'Symbol ID, used in delete')
+      ..addCommand('upload')
+      ..addCommand('list')
+      ..addCommand('delete');
   }
 }

@@ -29,10 +29,7 @@ class ConfigProp {
   /// The environment variable key
   final String envKey;
 
-  const ConfigProp({
-    required this.name,
-    required this.envKey,
-  });
+  const ConfigProp({required this.name, required this.envKey});
 
   /// Load the value of the property from arguments or environment variables
   String load(ArgResults arguments) {
@@ -45,7 +42,8 @@ class ConfigProp {
     if (value == null) {
       print('Error: Missing "$name"');
       print(
-          '  Please provide "$name" via argument or environment variable "$envKey"');
+        '  Please provide "$name" via argument or environment variable "$envKey"',
+      );
       exit(2);
     }
     return value;
