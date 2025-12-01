@@ -17,27 +17,12 @@ ArgParser buildParser() {
       negatable: false,
       help: 'Show additional command output.',
     )
-    ..addFlag(
-      'version',
-      negatable: false,
-      help: 'Print the tool version.',
-    )
-    ..addCommand(
-      sourcemapCommand.name,
-      sourcemapCommand.buildParser(),
-    )
-    ..addCommand(
-      symbolsCommand.name,
-      symbolsCommand.buildParser(),
-    )
-    ..addCommand(
-      deploymentsCommand.name,
-      deploymentsCommand.buildParser(),
-    )
-    ..addCommand(
-      proguardCommand.name,
-      proguardCommand.buildParser(),
-    );
+    ..addFlag('version', negatable: false, help: 'Print the tool version.')
+    ..addCommand(sourcemapCommand.name, sourcemapCommand.buildParser())
+    ..addCommand(symbolsCommand.name, symbolsCommand.buildParser())
+    ..addCommand(deploymentsCommand.name, deploymentsCommand.buildParser())
+    ..addCommand(proguardCommand.name, proguardCommand.buildParser())
+    ..addCommand(dsymCommand.name, dsymCommand.buildParser());
 }
 
 void printUsage(ArgParser argParser) {
@@ -92,6 +77,11 @@ void main(List<String> arguments) {
 
     if (results.command?.name == proguardCommand.name) {
       proguardCommand.execute(results.command!, verbose);
+      return;
+    }
+
+    if (results.command?.name == dsymCommand.name) {
+      dsymCommand.execute(results.command!, verbose);
       return;
     }
 

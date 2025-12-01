@@ -3,9 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:raygun_cli/src/core/raygun_api.dart';
 
 class SymbolsApi {
-  const SymbolsApi({
-    required this.httpClient,
-  });
+  const SymbolsApi({required this.httpClient});
 
   /// Creates a new instance of [SymbolsApi] with the provided [httpClient].
   SymbolsApi.create() : httpClient = http.Client();
@@ -19,14 +17,15 @@ class SymbolsApi {
     required String path,
     required String version,
   }) async {
-    final request = RaygunMultipartRequestBuilder(
-      'https://api.raygun.com/v3/applications/$appId/flutter-symbols',
-      'PUT',
-    )
-        .addBearerToken(token)
-        .addField('version', version)
-        .addFile('file', path)
-        .build();
+    final request =
+        RaygunMultipartRequestBuilder(
+              'https://api.raygun.com/v3/applications/$appId/flutter-symbols',
+              'PUT',
+            )
+            .addBearerToken(token)
+            .addField('version', version)
+            .addFile('file', path)
+            .build();
 
     final response = await httpClient.send(request);
     if (response.statusCode == 200 || response.statusCode == 201) {

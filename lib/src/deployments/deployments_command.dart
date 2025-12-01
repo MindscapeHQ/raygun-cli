@@ -5,8 +5,9 @@ import 'package:raygun_cli/src/core/raygun_command.dart';
 import 'package:raygun_cli/src/deployments/deployments.dart';
 import 'package:raygun_cli/src/deployments/deployments_api.dart';
 
-final DeploymentsCommand deploymentsCommand =
-    DeploymentsCommand(api: DeploymentsApi.create());
+final DeploymentsCommand deploymentsCommand = DeploymentsCommand(
+  api: DeploymentsApi.create(),
+);
 
 class DeploymentsCommand extends RaygunCommand {
   const DeploymentsCommand({required this.api});
@@ -25,11 +26,7 @@ class DeploymentsCommand extends RaygunCommand {
         negatable: false,
         help: 'Print deployments usage information',
       )
-      ..addOption(
-        'token',
-        mandatory: true,
-        help: 'Raygun access token',
-      )
+      ..addOption('token', mandatory: true, help: 'Raygun access token')
       ..addOption(
         'api-key',
         mandatory: true,
@@ -63,11 +60,7 @@ class DeploymentsCommand extends RaygunCommand {
         mandatory: false,
         help: 'Email address of the person deploying the software',
       )
-      ..addOption(
-        'comment',
-        mandatory: false,
-        help: 'Deployment comment',
-      );
+      ..addOption('comment', mandatory: false, help: 'Deployment comment');
   }
 
   @override
@@ -78,19 +71,18 @@ class DeploymentsCommand extends RaygunCommand {
       exit(0);
     }
 
-    Deployments(
-      command: command,
-      verbose: verbose,
-      deploymentsApi: api,
-    ).notify().then((success) {
-      if (success) {
-        exit(0);
-      } else {
-        exit(1);
-      }
-    }).catchError((error) {
-      print('Error creating deployment: $error');
-      exit(2);
-    });
+    Deployments(command: command, verbose: verbose, deploymentsApi: api)
+        .notify()
+        .then((success) {
+          if (success) {
+            exit(0);
+          } else {
+            exit(1);
+          }
+        })
+        .catchError((error) {
+          print('Error creating deployment: $error');
+          exit(2);
+        });
   }
 }

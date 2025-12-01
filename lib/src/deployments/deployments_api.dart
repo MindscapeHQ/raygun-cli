@@ -35,10 +35,9 @@ class DeploymentsApi {
       'deployedAt': DateTime.now().toUtc().toIso8601String(),
     };
 
-    final request = RaygunPostRequestBuilder(url)
-        .addBearerToken(token)
-        .addJsonBody(payload)
-        .build();
+    final request = RaygunPostRequestBuilder(
+      url,
+    ).addBearerToken(token).addJsonBody(payload).build();
 
     try {
       final response = await httpClient.send(request);
@@ -47,7 +46,8 @@ class DeploymentsApi {
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('Success creating deployment: ${response.statusCode}');
         print(
-            'Deployment identifier: ${jsonDecode(responseBody)['identifier']}');
+          'Deployment identifier: ${jsonDecode(responseBody)['identifier']}',
+        );
         return true;
       }
 

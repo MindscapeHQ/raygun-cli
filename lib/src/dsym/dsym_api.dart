@@ -1,22 +1,21 @@
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:raygun_cli/src/core/raygun_api.dart';
 
-class SourcemapApi {
-  const SourcemapApi({required this.httpClient});
-
-  /// Creates a new instance of [SourcemapApi] with the provided [httpClient].
-  SourcemapApi.create() : httpClient = http.Client();
+class DsymApi {
+  const DsymApi(this.httpClient);
 
   final http.Client httpClient;
 
-  /// Uploads a sourcemap file to Raygun.
-  /// returns true if the upload was successful.
-  Future<bool> uploadSourcemap({
+  DsymApi.create() : httpClient = http.Client();
+
+  /// Uploads a dSYM zip file to Raygun.
+  /// Returns true if the upload was successful.
+  Future<bool> uploadDsym({
     required String appId,
-    required String token,
+    required String externalAccessToken,
     required String path,
-    required String uri,
   }) async {
     final file = File(path);
     if (!file.existsSync()) {
@@ -26,25 +25,25 @@ class SourcemapApi {
     print('Uploading: $path');
 
     final request = RaygunMultipartRequestBuilder(
-      'https://api.raygun.com/v3/applications/$appId/source-maps',
-      'PUT',
-    ).addBearerToken(token).addField('uri', uri).addFile('file', path).build();
+      'https://app.raygun.com/dashboard/$appId/settings/symbols?authToken=$externalAccessToken',
+      'POST',
+    ).addFile('DsymFile', path).build();
 
     try {
       final response = await httpClient.send(request);
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        print('File uploaded successfully!');
+        print('Success uploading dSYM file: ${response.statusCode}');
         print('Result: $responseBody');
         return true;
       }
 
-      print('Error uploading file. Response code: ${response.statusCode}');
+      print('Error uploading dSYM file: ${response.statusCode}');
       print('Response: $responseBody');
       return false;
     } catch (e) {
-      print('Exception while uploading sourcemap file: $e');
+      print('Exception while uploading dSYM file: $e');
       return false;
     }
   }

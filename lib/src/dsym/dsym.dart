@@ -1,24 +1,18 @@
-import 'package:raygun_cli/src/proguard/proguard_api.dart';
+import 'package:raygun_cli/src/dsym/dsym_api.dart';
 import 'package:args/args.dart';
 import '../config_props.dart';
 
-class Proguard {
+class Dsym {
   final ArgResults command;
   final bool verbose;
-  final ProguardApi api;
+  final DsymApi api;
 
-  Proguard({required this.command, required this.verbose, required this.api});
+  Dsym({required this.command, required this.verbose, required this.api});
 
   Future<bool> upload() async {
     if (!command.wasParsed('path')) {
       print('Error: Missing "--path"');
       print('  Please provide "--path" via argument');
-      return false;
-    }
-
-    if (!command.wasParsed('version')) {
-      print('Error: Missing "--version"');
-      print('  Please provide "--version" via argument');
       return false;
     }
 
@@ -31,24 +25,18 @@ class Proguard {
     final externalAccessToken =
         command.option('external-access-token') as String;
     final path = command.option('path') as String;
-    final version = command.option('version') as String;
-    final overwrite = command.wasParsed('overwrite');
     final appId = ConfigProp.appId.load(command);
 
     if (verbose) {
       print('app-id: $appId');
       print('external-access-token: $externalAccessToken');
       print('path: $path');
-      print('version: $version');
-      print('overwrite: $overwrite');
     }
 
-    final success = await api.uploadProguardMapping(
+    final success = await api.uploadDsym(
       appId: appId,
       externalAccessToken: externalAccessToken,
       path: path,
-      version: version,
-      overwrite: overwrite,
     );
 
     return success;
