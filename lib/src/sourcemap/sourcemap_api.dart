@@ -32,12 +32,21 @@ class SourcemapApi {
       'PUT',
     ).addBearerToken(token).addField('uri', uri).addFile('file', path).build();
 
-    final response = await httpClient.send(request);
-    if (response.statusCode == 200) {
-      print('File uploaded successfully!');
-      return true;
-    } else {
+    try {
+      final response = await httpClient.send(request);
+      final responseBody = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        print('File uploaded successfully!');
+        print('Result: $responseBody');
+        return true;
+      }
+
       print('Error uploading file. Response code: ${response.statusCode}');
+      print('Response: $responseBody');
+      return false;
+    } catch (e) {
+      print('Exception while uploading sourcemap file: $e');
       return false;
     }
   }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -37,7 +38,7 @@ void main() {
     group('uploadSourcemap', () {
       test('returns true when upload is successful (200)', () async {
         final response = http.StreamedResponse(
-          Stream.value([]),
+          Stream.value(utf8.encode('Upload successful')),
           200,
         );
 
@@ -56,7 +57,7 @@ void main() {
 
       test('returns false when upload fails', () async {
         final response = http.StreamedResponse(
-          Stream.value([]),
+          Stream.value(utf8.encode('Bad request')),
           400,
         );
 
