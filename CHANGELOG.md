@@ -1,3 +1,11 @@
+## 1.1.0
+
+- feat: dSYM support (#40)
+- test: Refactor and Test Deployment command (#28)
+- test: Refactor and Test Proguard command (#27)
+- test: Refactor and tests Sourcemap command (#26)
+- test: Refactor and tests Symbols command (#25)
+
 ## 1.0.0
 
 - feat: #8 Proguard/R8 (#14) (2025-01-27)
