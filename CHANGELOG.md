@@ -1,3 +1,11 @@
+## 1.2.0
+
+- chore(deps): bump lints from 6.0.0 to 6.1.0, use null-aware elements (#46)
+- chore(deps): bump test from 1.28.0 to 1.29.0 (#47)
+- chore(deps): bump build_runner from 2.10.4 to 2.10.5 (#48)
+- chore(deps): bump mockito from 5.6.1 to 5.6.3 (#49)
+- chore: upgrade transitive dependencies (#50)
+
 ## 1.1.0
 
 - feat: dSYM support (#40)
