@@ -27,11 +27,11 @@ class DeploymentsApi {
 
     final payload = {
       'version': version,
-      if (ownerName != null) 'ownerName': ownerName,
-      if (emailAddress != null) 'emailAddress': emailAddress,
-      if (comment != null) 'comment': comment,
-      if (scmIdentifier != null) 'scmIdentifier': scmIdentifier,
-      if (scmType != null) 'scmType': scmType,
+      'ownerName': ?ownerName,
+      'emailAddress': ?emailAddress,
+      'comment': ?comment,
+      'scmIdentifier': ?scmIdentifier,
+      'scmType': ?scmType,
       'deployedAt': DateTime.now().toUtc().toIso8601String(),
     };
 
