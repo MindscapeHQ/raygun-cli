@@ -1,7 +1,7 @@
 import 'package:args/args.dart';
 import 'package:raygun_cli/raygun_cli.dart';
 
-const String version = '1.2.0';
+const String version = '1.2.1';
 
 ArgParser buildParser() {
   return ArgParser()
