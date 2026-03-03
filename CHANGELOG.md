@@ -1,3 +1,8 @@
+## 1.2.1
+
+- chore(deps): bump test from 1.29.0 to 1.30.0 (#53)
+- chore(deps): bump build_runner from 2.10.5 to 2.11.1 (#54)
+
 ## 1.2.0
 
 - chore(deps): bump lints from 6.0.0 to 6.1.0, use null-aware elements (#46)
