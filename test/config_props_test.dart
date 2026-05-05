@@ -152,27 +152,24 @@ void main() {
       expect(ConfigProp.apiKey.load(results), 'api-key-file');
     });
 
-    test(
-      'mixed sources across props: file→appId, env→token, arg→apiKey',
-      () {
-        Environment.setInstance(
-          Environment(
-            raygunAppId: null,
-            raygunToken: 'token-env',
-            raygunApiKey: null,
-          ),
-        );
-        installConfigFile({
-          Environment.raygunAppIdKey: 'app-id-file',
-          Environment.raygunTokenKey: 'token-file', // shadowed by env
-          Environment.raygunApiKeyKey: 'api-key-file', // shadowed by arg
-        });
-        final results = buildParser().parse(['--api-key=api-key-arg']);
-        expect(ConfigProp.appId.load(results), 'app-id-file');
-        expect(ConfigProp.token.load(results), 'token-env');
-        expect(ConfigProp.apiKey.load(results), 'api-key-arg');
-      },
-    );
+    test('mixed sources across props: file→appId, env→token, arg→apiKey', () {
+      Environment.setInstance(
+        Environment(
+          raygunAppId: null,
+          raygunToken: 'token-env',
+          raygunApiKey: null,
+        ),
+      );
+      installConfigFile({
+        Environment.raygunAppIdKey: 'app-id-file',
+        Environment.raygunTokenKey: 'token-file', // shadowed by env
+        Environment.raygunApiKeyKey: 'api-key-file', // shadowed by arg
+      });
+      final results = buildParser().parse(['--api-key=api-key-arg']);
+      expect(ConfigProp.appId.load(results), 'app-id-file');
+      expect(ConfigProp.token.load(results), 'token-env');
+      expect(ConfigProp.apiKey.load(results), 'api-key-arg');
+    });
 
     test('falls through to env when file lacks the requested key', () {
       Environment.setInstance(
@@ -204,32 +201,36 @@ void main() {
   // New: failure mode — missing in all three sources
   // -----------------------------------------------------------------
   group('ConfigProp missing-in-all-sources failure', () {
-    test('exits with code 2 and prints helpful error', () async {
-      // Use a child process to assert exit code, since exit(2) would kill
-      // the test runner. We invoke the real CLI with no arg, no env, no
-      // .env file present in the temp working directory.
-      final result = await Process.run(
-        Platform.resolvedExecutable,
-        [
-          'run',
-          p.absolute('bin/raygun_cli.dart'),
-          'deployments',
-          '--version=1.0.0',
-        ],
-        workingDirectory: tempDir.path,
-        // includeParentEnvironment: false + empty env map ensures NONE of the
-        // RAYGUN_* env vars are visible to the child process — forcing
-        // ConfigProp.load() to fall through every tier and exit(2).
-        environment: const {},
-        includeParentEnvironment: false,
-      );
-      expect(result.exitCode, 2);
-      expect(result.stdout, contains('Missing'));
-      expect(
-        result.stdout,
-        contains('.env config file'),
-        reason: 'error message should mention .env as a third option',
-      );
-    }, timeout: const Timeout(Duration(seconds: 60)));
+    test(
+      'exits with code 2 and prints helpful error',
+      () async {
+        // Use a child process to assert exit code, since exit(2) would kill
+        // the test runner. We invoke the real CLI with no arg, no env, no
+        // .env file present in the temp working directory.
+        final result = await Process.run(
+          Platform.resolvedExecutable,
+          [
+            'run',
+            p.absolute('bin/raygun_cli.dart'),
+            'deployments',
+            '--version=1.0.0',
+          ],
+          workingDirectory: tempDir.path,
+          // includeParentEnvironment: false + empty env map ensures NONE of the
+          // RAYGUN_* env vars are visible to the child process — forcing
+          // ConfigProp.load() to fall through every tier and exit(2).
+          environment: const {},
+          includeParentEnvironment: false,
+        );
+        expect(result.exitCode, 2);
+        expect(result.stdout, contains('Missing'));
+        expect(
+          result.stdout,
+          contains('.env config file'),
+          reason: 'error message should mention .env as a third option',
+        );
+      },
+      timeout: const Timeout(Duration(seconds: 60)),
+    );
   });
 }

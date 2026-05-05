@@ -120,8 +120,8 @@ class ConfigFile {
   /// Default boundary for upward discovery: the user's home directory
   /// (or the filesystem root if `HOME`/`USERPROFILE` is unset).
   static String _defaultStopDir() {
-    final home = Platform.environment['HOME'] ??
-        Platform.environment['USERPROFILE'];
+    final home =
+        Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
     if (home != null && home.isNotEmpty) return home;
     return p.rootPrefix(Directory.current.path);
   }

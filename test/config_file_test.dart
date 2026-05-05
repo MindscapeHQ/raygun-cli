@@ -122,17 +122,21 @@ void main() {
         }
       });
 
-      test('exits with code 2 when explicit path is missing', () async {
-        final result = await Process.run(Platform.resolvedExecutable, [
-          'run',
-          'bin/raygun_cli.dart',
-          '--config-file=/definitely/does/not/exist.env',
-          'deployments',
-          '--version=1.0.0',
-        ]);
-        expect(result.exitCode, 2);
-        expect(result.stdout, contains('Error: --config-file points to'));
-      }, timeout: const Timeout(Duration(seconds: 60)));
+      test(
+        'exits with code 2 when explicit path is missing',
+        () async {
+          final result = await Process.run(Platform.resolvedExecutable, [
+            'run',
+            'bin/raygun_cli.dart',
+            '--config-file=/definitely/does/not/exist.env',
+            'deployments',
+            '--version=1.0.0',
+          ]);
+          expect(result.exitCode, 2);
+          expect(result.stdout, contains('Error: --config-file points to'));
+        },
+        timeout: const Timeout(Duration(seconds: 60)),
+      );
     });
 
     group('parsing', () {
