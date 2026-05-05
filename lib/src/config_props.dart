@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:raygun_cli/src/config_file.dart';
 import 'package:raygun_cli/src/environment.dart';
 
-/// A Config property is a value
-/// that can be set via argument
-/// or environment variable.
-/// TODO: #5 add support for config files (.raygun.yaml or similar)
+/// A Config property is a value that can be set via:
+///   1. CLI argument (highest priority)
+///   2. Environment variable
+///   3. `.env` config file (lowest priority)
 class ConfigProp {
   static const appId = ConfigProp(
     name: 'app-id',
@@ -31,21 +32,25 @@ class ConfigProp {
 
   const ConfigProp({required this.name, required this.envKey});
 
-  /// Load the value of the property from arguments or environment variables
+  /// Load the value of the property.
+  ///
+  /// Resolution order: CLI argument > environment variable > `.env` file.
+  /// Exits with code 2 if the value cannot be found in any source.
   String load(ArgResults arguments) {
-    String? value;
     if (arguments.wasParsed(name)) {
-      value = arguments[name];
-    } else {
-      value = Environment.instance[envKey];
+      return arguments[name];
     }
-    if (value == null) {
-      print('Error: Missing "$name"');
-      print(
-        '  Please provide "$name" via argument or environment variable "$envKey"',
-      );
-      exit(2);
-    }
-    return value;
+    final envValue = Environment.instance[envKey];
+    if (envValue != null) return envValue;
+
+    final fileValue = ConfigFile.instance[envKey];
+    if (fileValue != null) return fileValue;
+
+    print('Error: Missing "$name"');
+    print(
+      '  Please provide "$name" via --$name argument, environment variable '
+      '"$envKey", or as "$envKey" in a .env config file.',
+    );
+    exit(2);
   }
 }
