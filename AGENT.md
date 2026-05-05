@@ -15,7 +15,7 @@
 - **Main Entry**: `bin/raygun_cli.dart` - CLI argument parsing and command routing
 - **Commands**: `lib/src/` - Five main command modules: sourcemap, symbols, deployments, proguard, dsym
 - **APIs**: Each command has corresponding API client (`*_api.dart`) for Raygun REST API calls
-- **Config**: `config_props.dart` handles arg parsing with env var fallbacks (RAYGUN_APP_ID, RAYGUN_TOKEN, RAYGUN_API_KEY)
+- **Config**: `config_props.dart` handles arg parsing with env var and `.env` file fallbacks (RAYGUN_APP_ID, RAYGUN_TOKEN, RAYGUN_API_KEY). Resolution order: CLI arg > env var > `.env` file. See `lib/src/config_file.dart` for discovery logic.
 
 ### Directory Structure
 ```
@@ -326,8 +326,22 @@ export RAYGUN_TOKEN=your-token
 export RAYGUN_API_KEY=your-api-key
 ```
 
+### `.env` Config File
+The same keys are also read from a `.env` file in the current working directory
+(or any parent directory, up to `$HOME`). An explicit path can be passed with
+`--config-file=<path>`.
+
+```env
+# .env
+RAYGUN_APP_ID=your-app-id
+RAYGUN_TOKEN=your-token
+RAYGUN_API_KEY=your-api-key
+```
+
+Resolution precedence: CLI argument > environment variable > `.env` file.
+A sample is committed at `example/.env.example`.
+
 ## Known TODOs & Future Improvements
-- Config file support (.raygun.yaml or similar) - see `lib/src/config_props.dart:9`
 - NodeJS sourcemap platform support (currently stubbed in sourcemap command)
 - System package manager installations (brew, apt, etc.)
 
