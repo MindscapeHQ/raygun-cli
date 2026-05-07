@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
@@ -98,6 +99,95 @@ void main() {
         );
         expect(cfg['RAYGUN_APP_ID'], 'inner');
       });
+    });
+
+    // -----------------------------------------------------------------
+    // Discovery when HOME / USERPROFILE is unset (sandboxed containers,
+    // some CI runners). Without a home boundary, an unbounded walk would
+    // pick up a stray /.env or /etc/.env — we deliberately restrict
+    // discovery to the start directory only in that case.
+    // -----------------------------------------------------------------
+    group('discovery without HOME', () {
+      test('finds .env in start directory when HOME/USERPROFILE unset', () {
+        final envPath = writeEnv(tempDir, 'RAYGUN_APP_ID=cwd-only\n');
+        final cfg = ConfigFile.load(
+          startDir: tempDir.path,
+          environmentOverride: const {}, // simulate no HOME / USERPROFILE
+        );
+        expect(cfg.path, envPath);
+        expect(cfg['RAYGUN_APP_ID'], 'cwd-only');
+      });
+
+      test(
+        'does NOT walk to parent directories when HOME/USERPROFILE unset',
+        () {
+          // .env lives one level above start dir. With no home boundary,
+          // discovery must NOT find it (regression for the unbounded-walk
+          // bug flagged in PR #62 review).
+          writeEnv(tempDir, 'RAYGUN_APP_ID=parent-leaks\n');
+          final start = Directory(p.join(tempDir.path, 'sub'))..createSync();
+
+          final cfg = ConfigFile.load(
+            startDir: start.path,
+            environmentOverride: const {},
+          );
+          expect(cfg.path, isNull);
+          expect(cfg['RAYGUN_APP_ID'], isNull);
+        },
+      );
+
+      test('empty HOME string is treated the same as unset', () {
+        writeEnv(tempDir, 'RAYGUN_APP_ID=parent-leaks\n');
+        final start = Directory(p.join(tempDir.path, 'sub'))..createSync();
+
+        final cfg = ConfigFile.load(
+          startDir: start.path,
+          environmentOverride: const {'HOME': ''},
+        );
+        expect(cfg.path, isNull);
+      });
+
+      test('USERPROFILE is honored as a fallback for HOME', () {
+        // Simulating Windows: only USERPROFILE is set. Discovery should
+        // still walk up to that boundary.
+        final envPath = writeEnv(tempDir, 'RAYGUN_APP_ID=found\n');
+        final start = Directory(p.join(tempDir.path, 'a', 'b'))
+          ..createSync(recursive: true);
+
+        final cfg = ConfigFile.load(
+          startDir: start.path,
+          environmentOverride: {'USERPROFILE': tempDir.path},
+        );
+        expect(cfg.path, envPath);
+      });
+
+      test(
+        'verbose mode prints the "restricting to current directory" hint',
+        () {
+          final logs = <String>[];
+          runZoned(
+            () {
+              ConfigFile.load(
+                startDir: tempDir.path,
+                environmentOverride: const {},
+                verbose: true,
+              );
+            },
+            zoneSpecification: ZoneSpecification(
+              print: (_, _, _, line) => logs.add(line),
+            ),
+          );
+          expect(
+            logs.any(
+              (l) => l.contains(
+                'HOME/USERPROFILE not set; restricting .env discovery '
+                'to current directory',
+              ),
+            ),
+            isTrue,
+          );
+        },
+      );
     });
 
     group('explicit --config-file path', () {

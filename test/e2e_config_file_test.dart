@@ -278,6 +278,42 @@ void main() {
     );
 
     test(
+      'parent-directory .env is NOT discovered when HOME is unset',
+      () async {
+        // Regression for the unbounded-walk bug (PR #62 review): when HOME
+        // and USERPROFILE are both unset, we used to walk up to the
+        // filesystem root and could pick up a stray /.env. Now we only
+        // check the CWD, so a parent .env must not be discovered.
+        writeEnv(tempDir, {
+          'RAYGUN_TOKEN': 'tok-from-parent',
+          'RAYGUN_API_KEY': 'key-from-parent',
+        });
+        final nested = Directory(p.join(tempDir.path, 'sub'))
+          ..createSync(recursive: true);
+
+        final result = await runCli(
+          nested,
+          args: ['-v', 'deployments', '--version=1.0.0'],
+          // No HOME, no USERPROFILE, no RAYGUN_* vars.
+        );
+        // Should fail with the friendly Missing message — neither the env
+        // nor the parent .env should have supplied credentials.
+        expect(result.exitCode, 2);
+        expect(result.stdout, contains('Missing'));
+        expect(result.stdout, isNot(contains('tok-from-parent')));
+        expect(result.stdout, isNot(contains('key-from-parent')));
+        expect(
+          result.stdout,
+          contains(
+            'HOME/USERPROFILE not set; restricting .env discovery '
+            'to current directory',
+          ),
+        );
+      },
+      timeout: const Timeout(Duration(seconds: 90)),
+    );
+
+    test(
       'empty .env value falls through to env var',
       () async {
         // .env has the keys but blank; env vars supply real values.

@@ -9,7 +9,13 @@ import 'package:path/path.dart' as p;
 /// 1. An explicit path provided via `--config-file=<path>`.
 /// 2. A `.env` in the current working directory.
 /// 3. A `.env` in any parent directory, walking up to (but not past) the
-///    user's home directory or filesystem root.
+///    user's home directory (`$HOME` / `%USERPROFILE%`).
+///
+/// When neither `$HOME` nor `%USERPROFILE%` is set (e.g. in sandboxed CI
+/// runners or minimal containers), discovery is restricted to the current
+/// working directory only — we deliberately do not walk to the filesystem
+/// root, which could otherwise pick up a stray `/.env` or `/etc/.env`.
+/// Use `--config-file=<path>` for explicit control in those environments.
 ///
 /// If no file is found, an empty instance is returned (silent no-op).
 ///
@@ -53,13 +59,18 @@ class ConfigFile {
   /// - [explicitPath]: if non-null, load that file directly. If the file does
   ///   not exist, prints an error and exits with code 2.
   /// - [startDir]: directory to start searching from (defaults to CWD).
-  /// - [stopDir]: directory to stop searching at, exclusive of its parent
-  ///   (defaults to the user's home directory; falls back to filesystem root).
+  /// - [stopDir]: directory to stop searching at, inclusive (defaults to the
+  ///   user's home directory). When `null` and `HOME`/`USERPROFILE` are also
+  ///   unset, discovery is restricted to [startDir] only — no walking up.
+  /// - [environmentOverride]: optional map used in place of
+  ///   `Platform.environment` for resolving `HOME`/`USERPROFILE`. Intended
+  ///   for tests; production callers should leave this `null`.
   /// - [verbose]: if true, prints the path of the loaded file.
   static ConfigFile load({
     String? explicitPath,
     String? startDir,
     String? stopDir,
+    Map<String, String>? environmentOverride,
     bool verbose = false,
   }) {
     if (explicitPath != null) {
@@ -73,15 +84,40 @@ class ConfigFile {
       return ConfigFile._(env, file.absolute.path);
     }
 
-    final discovered = _discover(
-      startDir: startDir ?? Directory.current.path,
-      stopDir: stopDir ?? _defaultStopDir(),
-    );
+    final effectiveStartDir = startDir ?? Directory.current.path;
+    final effectiveStopDir = stopDir ?? _defaultStopDir(environmentOverride);
+
+    final String? discovered;
+    if (effectiveStopDir == null) {
+      // No home boundary available — only check the CWD. Walking up to the
+      // filesystem root would risk silently picking up a stray /.env or
+      // /etc/.env in sandboxed CI runners.
+      if (verbose) {
+        print(
+          '[VERBOSE] HOME/USERPROFILE not set; restricting .env discovery '
+          'to current directory',
+        );
+      }
+      discovered = _checkSingleDir(effectiveStartDir);
+    } else {
+      discovered = _discover(
+        startDir: effectiveStartDir,
+        stopDir: effectiveStopDir,
+      );
+    }
+
     if (discovered == null) return ConfigFile.empty();
 
     final env = DotEnv(quiet: true)..load([discovered]);
     if (verbose) print('Loaded config from $discovered');
     return ConfigFile._(env, discovered);
+  }
+
+  /// Returns the absolute path to a `.env` directly in [dir], or null.
+  /// Used when no upward walk is performed.
+  static String? _checkSingleDir(String dir) {
+    final candidate = File(p.join(p.absolute(dir), fileName));
+    return candidate.existsSync() ? candidate.absolute.path : null;
   }
 
   /// Walk up from [startDir] looking for [fileName]. Stops once the parent
@@ -117,12 +153,15 @@ class ConfigFile {
     }
   }
 
-  /// Default boundary for upward discovery: the user's home directory
-  /// (or the filesystem root if `HOME`/`USERPROFILE` is unset).
-  static String _defaultStopDir() {
-    final home =
-        Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
-    if (home != null && home.isNotEmpty) return home;
-    return p.rootPrefix(Directory.current.path);
+  /// Default boundary for upward discovery: the user's home directory.
+  /// Returns `null` if neither `HOME` nor `USERPROFILE` is set, in which
+  /// case [load] will restrict discovery to the start directory only.
+  ///
+  /// [environmentOverride] is for tests; when `null`, reads from
+  /// `Platform.environment`.
+  static String? _defaultStopDir([Map<String, String>? environmentOverride]) {
+    final src = environmentOverride ?? Platform.environment;
+    final home = src['HOME'] ?? src['USERPROFILE'];
+    return (home != null && home.isNotEmpty) ? home : null;
   }
 }

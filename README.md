@@ -84,9 +84,12 @@ priority (highest first):
 ##### Config file
 
 `raygun-cli` can read its configuration from a standard `.env` file. By
-default, it looks for a `.env` in the current working directory and, failing
-that, walks up parent directories until it finds one (stopping at your home
-directory). You can also pass an explicit path with `--config-file=<path>`.
+default, it looks for a `.env` in the current working directory and, if not
+found, walks up parent directories until it finds one — stopping at your home
+directory (`$HOME` / `%USERPROFILE%`). If neither is set (e.g. in some
+sandboxed CI runners or minimal containers), discovery is restricted to the
+current directory only; pass `--config-file=<path>` for an explicit override
+in those environments.
 
 > ⚠️ A `.env` typically contains secrets — make sure to add it to your
 > `.gitignore` to avoid committing tokens to source control.
