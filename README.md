@@ -91,6 +91,14 @@ directory). You can also pass an explicit path with `--config-file=<path>`.
 > ⚠️ A `.env` typically contains secrets — make sure to add it to your
 > `.gitignore` to avoid committing tokens to source control.
 
+Empty (`RAYGUN_TOKEN=`) and whitespace-only (`RAYGUN_TOKEN="   "`) values are
+treated as **unset** at every tier (CLI argument, environment variable, and
+`.env` file) and fall through to the next source. This way, copying
+[`example/.env.example`](example/.env.example) and forgetting to fill in a
+value — or fat-fingering an env var to whitespace — surfaces a friendly
+`Error: Missing "..."` instead of an opaque HTTP error from the Raygun API.
+Run with `-v` / `--verbose` to see exactly which source supplied each value.
+
 Example `.env`:
 
 ```env

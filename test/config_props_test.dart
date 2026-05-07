@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -6,6 +7,16 @@ import 'package:raygun_cli/src/config_file.dart';
 import 'package:raygun_cli/src/config_props.dart';
 import 'package:raygun_cli/src/environment.dart';
 import 'package:test/test.dart';
+
+/// Captures `print` calls made inside [body] into [logs].
+void runZonedPrint(List<String> logs, void Function() body) {
+  runZoned(
+    body,
+    zoneSpecification: ZoneSpecification(
+      print: (_, _, _, line) => logs.add(line),
+    ),
+  );
+}
 
 void main() {
   ArgParser buildParser() => ArgParser()
@@ -186,15 +197,198 @@ void main() {
     });
 
     test(
-      'file with empty value (KEY=) returns empty string (documented behaviour)',
+      'file with empty value (KEY=) is treated as missing and falls through',
       () {
-        // dotenv stores '' for empty values. We treat that as a present-but-
-        // empty value, NOT as missing. Guarding this in a test lock-step.
+        // dotenv stores '' for empty values. ConfigProp treats empty as
+        // missing and falls through to the next tier — a higher-priority
+        // env var must win.
+        Environment.setInstance(
+          Environment(
+            raygunAppId: 'app-id-env',
+            raygunToken: null,
+            raygunApiKey: null,
+          ),
+        );
         installConfigFile({Environment.raygunAppIdKey: ''});
         final results = buildParser().parse([]);
-        expect(ConfigProp.appId.load(results), '');
+        expect(ConfigProp.appId.load(results), 'app-id-env');
       },
     );
+
+    test(
+      'empty value at every tier exits with code 2',
+      () async {
+        // Empty .env value, empty env var, empty CLI arg — must surface the
+        // friendly "Missing" error, not propagate '' downstream. Spawned in
+        // a child process so the exit(2) doesn't kill the test runner.
+        File(
+          p.join(tempDir.path, ConfigFile.fileName),
+        ).writeAsStringSync('RAYGUN_TOKEN=\nRAYGUN_API_KEY=\n');
+        final result = await Process.run(
+          Platform.resolvedExecutable,
+          [
+            'run',
+            p.absolute('bin/raygun_cli.dart'),
+            'deployments',
+            '--version=1.0.0',
+            '--token=',
+            '--api-key=',
+          ],
+          workingDirectory: tempDir.path,
+          environment: const {'RAYGUN_TOKEN': '', 'RAYGUN_API_KEY': ''},
+          includeParentEnvironment: false,
+        );
+        expect(result.exitCode, 2);
+        expect(result.stdout, contains('Missing'));
+        expect(
+          result.stdout,
+          contains('Empty or whitespace-only values are treated as missing'),
+        );
+      },
+      timeout: const Timeout(Duration(seconds: 60)),
+    );
+
+    test('empty CLI arg falls through to env var', () {
+      Environment.setInstance(
+        Environment(
+          raygunAppId: 'app-id-env',
+          raygunToken: null,
+          raygunApiKey: null,
+        ),
+      );
+      final results = buildParser().parse(['--app-id=']);
+      expect(ConfigProp.appId.load(results), 'app-id-env');
+    });
+
+    test('empty env var falls through to .env file', () {
+      Environment.setInstance(
+        Environment(raygunAppId: '', raygunToken: null, raygunApiKey: null),
+      );
+      installConfigFile({Environment.raygunAppIdKey: 'app-id-file'});
+      final results = buildParser().parse([]);
+      expect(ConfigProp.appId.load(results), 'app-id-file');
+    });
+
+    test('whitespace-only CLI arg falls through to env var', () {
+      // The user types `--app-id="   "` — currently accepted as a real value
+      // and propagated to Raygun (404). Must instead fall through.
+      Environment.setInstance(
+        Environment(
+          raygunAppId: 'app-id-env',
+          raygunToken: null,
+          raygunApiKey: null,
+        ),
+      );
+      final results = buildParser().parse(['--app-id=   ']);
+      expect(ConfigProp.appId.load(results), 'app-id-env');
+    });
+
+    test('whitespace-only env var falls through to .env file', () {
+      // `export RAYGUN_APP_ID=" "` should not satisfy the lookup.
+      Environment.setInstance(
+        Environment(raygunAppId: '   ', raygunToken: null, raygunApiKey: null),
+      );
+      installConfigFile({Environment.raygunAppIdKey: 'app-id-file'});
+      final results = buildParser().parse([]);
+      expect(ConfigProp.appId.load(results), 'app-id-file');
+    });
+
+    test('tab-only env var is treated as missing', () {
+      Environment.setInstance(
+        Environment(raygunAppId: '\t\t', raygunToken: null, raygunApiKey: null),
+      );
+      installConfigFile({Environment.raygunAppIdKey: 'app-id-file'});
+      final results = buildParser().parse([]);
+      expect(ConfigProp.appId.load(results), 'app-id-file');
+    });
+  });
+
+  // -----------------------------------------------------------------
+  // New: verbose source-attribution logging
+  // -----------------------------------------------------------------
+  group('ConfigProp verbose attribution', () {
+    test('prints CLI source line when value comes from CLI', () {
+      final results = buildParser().parse(['--app-id=from-arg']);
+      final logs = <String>[];
+      runZonedPrint(logs, () {
+        expect(ConfigProp.appId.load(results, verbose: true), 'from-arg');
+      });
+      expect(logs, contains('[VERBOSE] Resolved app-id from CLI argument'));
+    });
+
+    test('prints env source line (with key) when value comes from env', () {
+      Environment.setInstance(
+        Environment(
+          raygunAppId: 'from-env',
+          raygunToken: null,
+          raygunApiKey: null,
+        ),
+      );
+      final results = buildParser().parse([]);
+      final logs = <String>[];
+      runZonedPrint(logs, () {
+        expect(ConfigProp.appId.load(results, verbose: true), 'from-env');
+      });
+      expect(
+        logs,
+        contains(
+          '[VERBOSE] Resolved app-id from environment variable (RAYGUN_APP_ID)',
+        ),
+      );
+    });
+
+    test('prints .env source line (with path) when value comes from file', () {
+      installConfigFile({Environment.raygunAppIdKey: 'from-file'});
+      final results = buildParser().parse([]);
+      final logs = <String>[];
+      runZonedPrint(logs, () {
+        expect(ConfigProp.appId.load(results, verbose: true), 'from-file');
+      });
+      final envPath = p.join(tempDir.path, ConfigFile.fileName);
+      expect(
+        logs,
+        contains('[VERBOSE] Resolved app-id from .env file ($envPath)'),
+      );
+    });
+
+    test('prints "ignoring blank" notice when falling through tiers', () {
+      // Empty CLI arg + empty env var + valid file value.
+      Environment.setInstance(
+        Environment(raygunAppId: '', raygunToken: null, raygunApiKey: null),
+      );
+      installConfigFile({Environment.raygunAppIdKey: 'from-file'});
+      final results = buildParser().parse(['--app-id=']);
+      final logs = <String>[];
+      runZonedPrint(logs, () {
+        expect(ConfigProp.appId.load(results, verbose: true), 'from-file');
+      });
+      expect(
+        logs.any(
+          (l) =>
+              l.contains('Ignoring blank value for app-id from CLI argument'),
+        ),
+        isTrue,
+        reason: 'should warn about blank CLI arg',
+      );
+      expect(
+        logs.any(
+          (l) => l.contains(
+            'Ignoring blank value for app-id from environment variable',
+          ),
+        ),
+        isTrue,
+        reason: 'should warn about blank env var',
+      );
+    });
+
+    test('prints nothing when verbose is false', () {
+      final results = buildParser().parse(['--app-id=from-arg']);
+      final logs = <String>[];
+      runZonedPrint(logs, () {
+        expect(ConfigProp.appId.load(results), 'from-arg');
+      });
+      expect(logs, isEmpty);
+    });
   });
 
   // -----------------------------------------------------------------

@@ -25,8 +25,8 @@ class SourcemapSingleFile extends SourcemapBase {
     }
     final path = command.option('input-map')!;
 
-    final appId = ConfigProp.appId.load(command);
-    final token = ConfigProp.token.load(command);
+    final appId = ConfigProp.appId.load(command, verbose: verbose);
+    final token = ConfigProp.token.load(command, verbose: verbose);
 
     if (verbose) {
       print('app-id: $appId');

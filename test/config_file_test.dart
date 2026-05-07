@@ -233,10 +233,12 @@ export RAYGUN_API_KEY=apikey-789
         expect(cfg['RAYGUN_APP_ID'], 'valid');
       });
 
-      test('empty value `KEY=` is treated as null by lookup', () {
-        // dotenv stores empty strings; ConfigFile passes them through.
-        // Our convention: ConfigProp falls through on `null`, so an empty
-        // value here is still returned (not null).
+      test('empty value `KEY=` is passed through as empty string', () {
+        // dotenv stores empty strings; ConfigFile is a thin wrapper and
+        // returns them faithfully. The "empty == missing" rule lives in
+        // ConfigProp.load (see config_props_test.dart) so callers can still
+        // distinguish "key absent from file" (null) from "key present but
+        // blank" ('').
         writeEnv(tempDir, 'RAYGUN_APP_ID=\n');
         final cfg = ConfigFile.load(
           startDir: tempDir.path,

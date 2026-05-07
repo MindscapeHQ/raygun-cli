@@ -254,5 +254,52 @@ void main() {
       },
       timeout: const Timeout(Duration(seconds: 90)),
     );
+
+    test(
+      'empty .env value falls through and surfaces "Missing" not an HTTP error',
+      () async {
+        // The user's .env exists but the value is blank — common after
+        // copying example/.env.example. We must surface the friendly
+        // "Missing" exit-code-2 instead of letting '' propagate to an
+        // opaque 401/404 from the Raygun API.
+        writeEnv(tempDir, {'RAYGUN_TOKEN': '', 'RAYGUN_API_KEY': ''});
+        final result = await runCli(
+          tempDir,
+          args: ['deployments', '--version=1.0.0'],
+        );
+        expect(result.exitCode, 2);
+        expect(result.stdout, contains('Missing'));
+        expect(
+          result.stdout,
+          contains('Empty or whitespace-only values are treated as missing'),
+        );
+      },
+      timeout: const Timeout(Duration(seconds: 90)),
+    );
+
+    test(
+      'empty .env value falls through to env var',
+      () async {
+        // .env has the keys but blank; env vars supply real values.
+        // Verbose output should show the "Ignoring empty" notice and then
+        // resolve from the env var tier.
+        writeEnv(tempDir, {'RAYGUN_TOKEN': '', 'RAYGUN_API_KEY': ''});
+        final result = await runCli(
+          tempDir,
+          args: ['-v', 'deployments', '--version=1.0.0'],
+          env: {
+            'RAYGUN_TOKEN': 'tok-from-env',
+            'RAYGUN_API_KEY': 'key-from-env',
+          },
+        );
+        expect(result.stdout, contains('token: tok-from-env'));
+        expect(result.stdout, contains('api-key: key-from-env'));
+        expect(
+          result.stdout,
+          contains('[VERBOSE] Resolved token from environment variable'),
+        );
+      },
+      timeout: const Timeout(Duration(seconds: 90)),
+    );
   });
 }
