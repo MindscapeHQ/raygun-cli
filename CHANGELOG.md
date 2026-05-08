@@ -1,3 +1,13 @@
+## 1.3.0
+
+- feat: #5 add .env config file support (#62)
+- chore(deps): bump build_runner from 2.11.1 to 2.13.1 (#56)
+- chore(deps): bump test from 1.30.0 to 1.31.0 (#57)
+- chore(deps): bump mockito from 5.6.3 to 5.6.4 (#58)
+- chore(deps): bump build_runner from 2.13.1 to 2.15.0 (#59)
+- chore(deps): bump test from 1.31.0 to 1.31.1 (#60)
+- chore(deps): bump mockito from 5.6.4 to 5.6.5 (#61)
+
 ## 1.2.1
 
 - chore(deps): bump test from 1.29.0 to 1.30.0 (#53)
