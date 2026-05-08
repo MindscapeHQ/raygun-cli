@@ -68,16 +68,50 @@ All `raygun-cli` commands share the same configuration parameters.
 - Token: An access token from https://app.raygun.com/user/tokens.
 - API key: The API key of your application in Raygun.com
 
-You can pass these parameters via arguments, e.g. `--app-id=<id>`
-or you can set them as environment variables.
+You can provide these parameters via three sources, listed below in order of
+priority (highest first):
 
-Parameters passed as arguments have priority over environment variables.
+1. **CLI argument** — e.g. `--app-id=<id>`
+2. **Environment variable** — e.g. `RAYGUN_APP_ID=<id>`
+3. **`.env` config file** — see [Config file](#config-file) below
 
-| Parameter | Argument | Environment Variable |
-|-----------|----------|----------------------|
-| App ID    | `app-id` | `RAYGUN_APP_ID`      |
-| Token     | `token`  | `RAYGUN_TOKEN`       |
-| API key   | `api-key`| `RAYGUN_API_KEY`     |
+| Parameter | Argument  | Environment Variable / `.env` key |
+|-----------|-----------|-----------------------------------|
+| App ID    | `app-id`  | `RAYGUN_APP_ID`                   |
+| Token     | `token`   | `RAYGUN_TOKEN`                    |
+| API key   | `api-key` | `RAYGUN_API_KEY`                  |
+
+##### Config file
+
+`raygun-cli` can read its configuration from a standard `.env` file. By
+default, it looks for a `.env` in the current working directory and, if not
+found, walks up parent directories until it finds one — stopping at your home
+directory (`$HOME` / `%USERPROFILE%`). If neither is set (e.g. in some
+sandboxed CI runners or minimal containers), discovery is restricted to the
+current directory only; pass `--config-file=<path>` for an explicit override
+in those environments.
+
+> ⚠️ A `.env` typically contains secrets — make sure to add it to your
+> `.gitignore` to avoid committing tokens to source control.
+
+Empty (`RAYGUN_TOKEN=`) and whitespace-only (`RAYGUN_TOKEN="   "`) values are
+treated as **unset** at every tier (CLI argument, environment variable, and
+`.env` file) and fall through to the next source. This way, copying
+[`example/.env.example`](example/.env.example) and forgetting to fill in a
+value — or fat-fingering an env var to whitespace — surfaces a friendly
+`Error: Missing "..."` instead of an opaque HTTP error from the Raygun API.
+Run with `-v` / `--verbose` to see exactly which source supplied each value.
+
+Example `.env`:
+
+```env
+# Raygun CLI configuration
+RAYGUN_APP_ID=your-app-id
+RAYGUN_TOKEN=your-personal-access-token
+RAYGUN_API_KEY=your-application-api-key
+```
+
+A sample is provided at [`example/.env.example`](example/.env.example).
 
 
 #### Sourcemap Uploader

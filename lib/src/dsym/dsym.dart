@@ -25,7 +25,7 @@ class Dsym {
     final externalAccessToken =
         command.option('external-access-token') as String;
     final path = command.option('path') as String;
-    final appId = ConfigProp.appId.load(command);
+    final appId = ConfigProp.appId.load(command, verbose: verbose);
 
     if (verbose) {
       print('app-id: $appId');

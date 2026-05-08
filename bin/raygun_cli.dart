@@ -1,5 +1,6 @@
 import 'package:args/args.dart';
 import 'package:raygun_cli/raygun_cli.dart';
+import 'package:raygun_cli/src/config_file.dart';
 
 const String version = '1.2.1';
 
@@ -18,6 +19,12 @@ ArgParser buildParser() {
       help: 'Show additional command output.',
     )
     ..addFlag('version', negatable: false, help: 'Print the tool version.')
+    ..addOption(
+      'config-file',
+      help:
+          'Path to a .env config file. If omitted, the CLI will look for a '
+          '.env file in the current directory and parent directories.',
+    )
     ..addCommand(sourcemapCommand.name, sourcemapCommand.buildParser())
     ..addCommand(symbolsCommand.name, symbolsCommand.buildParser())
     ..addCommand(deploymentsCommand.name, deploymentsCommand.buildParser())
@@ -59,6 +66,17 @@ void main(List<String> arguments) {
       print('raygun-cli version: $version');
       return;
     }
+
+    // Initialize the config file singleton before any subcommand executes,
+    // so that ConfigProp.load() can read from it.
+    ConfigFile.setInstance(
+      ConfigFile.load(
+        explicitPath: results.wasParsed('config-file')
+            ? results['config-file'] as String
+            : null,
+        verbose: verbose,
+      ),
+    );
 
     if (results.command?.name == sourcemapCommand.name) {
       sourcemapCommand.execute(results.command!, verbose);

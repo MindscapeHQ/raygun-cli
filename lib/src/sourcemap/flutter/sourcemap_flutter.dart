@@ -20,8 +20,8 @@ class SourcemapFlutter extends SourcemapBase {
     final uri =
         command.option('uri') ?? '${command.option('base-uri')}main.dart.js';
     final path = command.option('input-map') ?? 'build/web/main.dart.js.map';
-    final appId = ConfigProp.appId.load(command);
-    final token = ConfigProp.token.load(command);
+    final appId = ConfigProp.appId.load(command, verbose: verbose);
+    final token = ConfigProp.token.load(command, verbose: verbose);
     if (verbose) {
       print('app-id: $appId');
       print('token: $token');

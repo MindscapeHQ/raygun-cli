@@ -28,8 +28,8 @@ class Deployments {
     final comment = command.option('comment');
     final scmIdentifier = command.option('scm-identifier');
     final scmType = command.option('scm-type');
-    final apiKey = ConfigProp.apiKey.load(command);
-    final token = ConfigProp.token.load(command);
+    final apiKey = ConfigProp.apiKey.load(command, verbose: verbose);
+    final token = ConfigProp.token.load(command, verbose: verbose);
 
     if (verbose) {
       print('token: $token');

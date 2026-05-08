@@ -24,8 +24,8 @@ class SymbolsCommand extends RaygunCommand {
     }
     run(
           command: command,
-          appId: ConfigProp.appId.load(command),
-          token: ConfigProp.token.load(command),
+          appId: ConfigProp.appId.load(command, verbose: verbose),
+          token: ConfigProp.token.load(command, verbose: verbose),
         )
         .then((result) {
           if (result) {
