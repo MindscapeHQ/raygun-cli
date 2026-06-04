@@ -1,6 +1,7 @@
 # Raygun CLI - Agent Guide
 
 ## Build/Test Commands
+- `dart pub get --enforce-lockfile` - Install dependencies from the committed lockfile
 - `dart test` - Run all tests
 - `dart test test/config_props_test.dart` - Run single test file
 - `dart analyze` - Run linter/analysis (uses package:lints/recommended.yaml)
@@ -189,8 +190,16 @@ final command = SymbolsCommand(api: mockApi);
 
 ### PR Requirements
 - **Title**: Must follow Conventional Commits (enforced by `.github/workflows/pr.yml`)
-- **Checks**: All must pass - format, analyze, test
+- **Checks**: All must pass - enforced lockfile install, format, analyze, test
 - **Platforms**: Multi-platform builds run automatically (Linux, macOS, Windows)
+
+### Lockfile and Supply-Chain Policy
+- `pubspec.lock` is intentionally committed because this repository builds a CLI executable and release binaries.
+- Use `dart pub get --enforce-lockfile` in CI, release workflows, and source-build verification. This fails when the lockfile is missing, out of sync with `pubspec.yaml`, or package content hashes do not match.
+- Dependency updates should be isolated to dependency-specific PRs, usually from Dependabot. Review `pubspec.lock` changes alongside any `pubspec.yaml` changes.
+- Do not broad-upgrade unrelated dependencies in feature or fix PRs unless needed for the task.
+- CI build artifacts include the compiled binary, `pubspec.lock`, and `SHA256SUMS`.
+- Release archives include the platform binary, `pubspec.lock`, `build-manifest.txt`, and `SHA256SUMS` so users can verify and reproduce builds from the tagged commit.
 
 ### Conventional Commits Format
 Examples:
@@ -206,8 +215,8 @@ Examples:
 
 ### Workflows
 - **pr.yml**: Validates PR title format
-- **main.yml**: Runs tests, format check, analysis, and builds binaries for all platforms
-- **release.yml**: On GitHub release, builds and uploads zipped binaries
+- **main.yml**: Enforces the lockfile, runs tests, format check, analysis, builds binaries for all platforms, and uploads binaries with lockfile/checksums
+- **release.yml**: On GitHub release, enforces the lockfile, builds zipped binaries, and includes lockfile/checksum/build-manifest files in each archive
 
 ## Development Workflow
 
@@ -235,6 +244,7 @@ export RAYGUN_API_KEY=test-api-key
 ### Build for Distribution
 ```bash
 # Compile for current platform
+dart pub get --enforce-lockfile
 dart compile exe bin/raygun_cli.dart -o raygun-cli
 
 # Note: Cross-compilation not supported; use CI for other platforms
@@ -356,12 +366,13 @@ A sample is committed at `example/.env.example`.
 
 ### Mock Generation Issues
 - Ensure `@GenerateMocks` annotation is present in test file
-- Run `dart pub get` to ensure dependencies are installed
+- Run `dart pub get --enforce-lockfile` to ensure dependencies are installed from the committed lockfile
 - Clean and rebuild: `dart run build_runner clean && dart run build_runner build`
 
 ### Build Issues
-- Ensure Dart SDK version matches `pubspec.yaml` requirement (^3.5.0)
-- Run `dart pub get` to update dependencies
+- Ensure Dart SDK version matches `pubspec.yaml` requirement (^3.10.0)
+- Run `dart pub get --enforce-lockfile` to verify the committed lockfile is usable
+- For intentional dependency updates, update `pubspec.yaml` if needed, run `dart pub upgrade <package>`, and commit the resulting `pubspec.lock`
 - Check that version in `bin/raygun_cli.dart` matches `pubspec.yaml`
 
 ### Test Failures

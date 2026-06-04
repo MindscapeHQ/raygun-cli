@@ -30,11 +30,47 @@ dart pub global activate raygun_cli
 
 **Install from sources**
 
-Compile and install the this tool with the following command:
+Compile and install this tool with the following command:
 
 ```
+dart pub get --enforce-lockfile
 dart pub global activate -s path .
 ```
+
+The committed `pubspec.lock` is part of the source build contract. It pins the
+exact dependency graph and package content hashes used by CI and release builds,
+so keep it committed and use `dart pub get --enforce-lockfile` when building
+from a checkout.
+
+#### Reproducible builds and dependency updates
+
+This repository is a CLI application that produces release binaries, so
+`pubspec.lock` is intentionally tracked. Dependency updates should be isolated
+to dependency-specific PRs, usually from Dependabot, and the matching
+`pubspec.lock` changes should be reviewed alongside any `pubspec.yaml` changes.
+
+CI and release builds install dependencies with:
+
+```
+dart pub get --enforce-lockfile
+```
+
+This fails the build if the lockfile is missing, out of sync with
+`pubspec.yaml`, or if resolved package content does not match the hashes in the
+lockfile.
+
+Release archives include the platform binary, `pubspec.lock`, a build manifest,
+and `SHA256SUMS`. To rebuild a released binary from source, check out the
+release tag and run:
+
+```
+dart pub get --enforce-lockfile
+dart compile exe bin/raygun_cli.dart -o raygun-cli
+```
+
+When installing `raygun_cli` as a dependency or global package from pub.dev,
+Dart resolves dependencies in the consuming environment. The lockfile policy
+above applies to this repository's development, CI, and release artifacts.
 
 ### Usage
 
@@ -330,4 +366,3 @@ dart compile exe bin/raygun_cli.dart -o raygun-cli
 ```
 
 Note: The binary is compiled for the architecture and host system. To compile for macOS and Windows we must setup CI VMs. See: https://dart.dev/tools/dart-compile#known-limitations
-
