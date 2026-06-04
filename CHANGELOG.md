@@ -1,3 +1,10 @@
+## 2.0.0
+
+- BREAKING: Require Dart SDK `^3.11.0` after dependency updates pulled in packages that no longer support Dart 3.10 (#67)
+- chore: Enforce the committed `pubspec.lock` in CI and release builds, and include lockfiles/checksums in build artifacts (#65)
+- chore: Rename `AGENT.md` to `AGENTS.md` and document the lockfile/release process (#65)
+- chore(deps): bump mockito from 5.6.4 to 5.7.0 (#64)
+
 ## 1.3.0
 
 - feat: #5 add .env config file support (#62)
