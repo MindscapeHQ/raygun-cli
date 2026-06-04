@@ -15,7 +15,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub get --enforce-lockfile
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
@@ -34,16 +34,22 @@ jobs:
       - uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub get --enforce-lockfile
 
       - name: Build Linux binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli
+
+      - name: Generate artifact checksums
+        run: sha256sum raygun-cli pubspec.lock > SHA256SUMS
 
       - name: Upload Linux binary
         uses: actions/upload-artifact@v4
         with:
           name: linux-binary
-          path: raygun-cli
+          path: |
+            raygun-cli
+            pubspec.lock
+            SHA256SUMS
 
   build-macos:
     runs-on: macos-latest
@@ -53,16 +59,22 @@ jobs:
       - uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub get --enforce-lockfile
 
       - name: Build MacOS binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli
+
+      - name: Generate artifact checksums
+        run: shasum -a 256 raygun-cli pubspec.lock > SHA256SUMS
 
       - name: Upload MacOS binary
         uses: actions/upload-artifact@v4
         with:
           name: macos-binary
-          path: raygun-cli
+          path: |
+            raygun-cli
+            pubspec.lock
+            SHA256SUMS
 
   build-windows:
     runs-on: windows-latest
@@ -72,13 +84,21 @@ jobs:
       - uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub get --enforce-lockfile
 
       - name: Build Windows binary
         run: dart compile exe bin/raygun_cli.dart -o raygun-cli.exe
+
+      - name: Generate artifact checksums
+        shell: pwsh
+        run: |
+          Get-FileHash raygun-cli.exe,pubspec.lock -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content SHA256SUMS
 
       - name: Upload Windows binary
         uses: actions/upload-artifact@v4
         with:
           name: windows-binary
-          path: raygun-cli.exe
+          path: |
+            raygun-cli.exe
+            pubspec.lock
+            SHA256SUMS
