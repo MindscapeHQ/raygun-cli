@@ -5,16 +5,22 @@ import 'package:raygun_cli/src/config_props.dart';
 import 'package:raygun_cli/src/core/raygun_command.dart';
 import 'package:raygun_cli/src/symbols/symbols_api.dart';
 
-SymbolsCommand symbolsCommand = SymbolsCommand(api: SymbolsApi.create());
+/// Default Flutter symbols command wired to the production Raygun API client.
+final SymbolsCommand symbolsCommand = SymbolsCommand(api: SymbolsApi.create());
 
+/// CLI command that uploads, lists, and deletes Flutter obfuscation symbols.
 class SymbolsCommand extends RaygunCommand {
+  /// Creates a symbols command that sends requests through [api].
   const SymbolsCommand({required this.api});
 
+  /// API client used to manage symbols files.
   final SymbolsApi api;
 
+  /// Name used to invoke this command from the top-level CLI parser.
   @override
   String get name => 'symbols';
 
+  /// Executes the symbols command and exits with a process status code.
   @override
   void execute(ArgResults command, bool verbose) {
     if (command.wasParsed('help')) {
@@ -40,6 +46,7 @@ class SymbolsCommand extends RaygunCommand {
         });
   }
 
+  /// Runs the selected symbols subcommand and returns whether it succeeded.
   Future<bool> run({
     required ArgResults command,
     required String appId,
@@ -77,6 +84,7 @@ class SymbolsCommand extends RaygunCommand {
     return false;
   }
 
+  /// Builds the argument parser for symbols upload, list, and delete options.
   @override
   ArgParser buildParser() {
     return ArgParser()

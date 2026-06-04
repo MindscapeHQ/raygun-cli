@@ -1,3 +1,7 @@
+## 2.0.1
+
+- docs: Add dartdoc comments to the exported public command API to improve pub.dev documentation scoring.
+
 ## 2.0.0
 
 - BREAKING: Require Dart SDK `^3.11.0` after dependency updates pulled in packages that no longer support Dart 3.10 (#67)

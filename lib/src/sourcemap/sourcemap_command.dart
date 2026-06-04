@@ -7,18 +7,24 @@ import 'package:raygun_cli/src/sourcemap/node/sourcemap_node.dart';
 import 'package:raygun_cli/src/sourcemap/sourcemap_api.dart';
 import 'package:raygun_cli/src/sourcemap/sourcemap_single_file.dart';
 
-SourcemapCommand sourcemapCommand = SourcemapCommand(
+/// Default sourcemap command wired to the production Raygun API client.
+final SourcemapCommand sourcemapCommand = SourcemapCommand(
   api: SourcemapApi.create(),
 );
 
+/// CLI command that uploads JavaScript sourcemaps to Raygun.
 class SourcemapCommand extends RaygunCommand {
+  /// Creates a sourcemap command that sends requests through [api].
   const SourcemapCommand({required this.api});
 
+  /// API client used to upload sourcemaps.
   final SourcemapApi api;
 
+  /// Name used to invoke this command from the top-level CLI parser.
   @override
   String get name => 'sourcemap';
 
+  /// Builds the argument parser for sourcemap upload options.
   @override
   ArgParser buildParser() {
     return ArgParser()
@@ -47,6 +53,7 @@ class SourcemapCommand extends RaygunCommand {
       ..addOption('src', abbr: 's', help: 'Source files');
   }
 
+  /// Executes the sourcemap command and exits with a process status code.
   @override
   void execute(ArgResults command, bool verbose) {
     if (command.wasParsed('help')) {
@@ -69,6 +76,7 @@ class SourcemapCommand extends RaygunCommand {
         });
   }
 
+  /// Runs the sourcemap upload workflow and returns whether it succeeded.
   Future<bool> run({required ArgResults command, required bool verbose}) async {
     if (command.wasParsed('help')) {
       print('Usage: raygun-cli sourcemap <arguments>');
