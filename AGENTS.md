@@ -370,7 +370,7 @@ A sample is committed at `example/.env.example`.
 - Clean and rebuild: `dart run build_runner clean && dart run build_runner build`
 
 ### Build Issues
-- Ensure Dart SDK version matches `pubspec.yaml` requirement (^3.10.0)
+- Ensure Dart SDK version matches `pubspec.yaml` requirement (^3.11.0)
 - Run `dart pub get --enforce-lockfile` to verify the committed lockfile is usable
 - For intentional dependency updates, update `pubspec.yaml` if needed, run `dart pub upgrade <package>`, and commit the resulting `pubspec.lock`
 - Check that version in `bin/raygun_cli.dart` matches `pubspec.yaml`
