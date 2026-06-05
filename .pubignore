@@ -1,6 +1,7 @@
 .dart_tool/
 .env
 build/
+doc/api/
 raygun-cli
 raygun-cli.exe
 raygun-cli-*.zip
