@@ -49,140 +49,117 @@ void main() {
   }
 
   group('E2E: .env discovery', () {
-    test(
-      'CLI loads credentials from .env in CWD',
-      () async {
-        writeEnv(tempDir, {
-          'RAYGUN_TOKEN': 'tok-cwd-e2e',
-          'RAYGUN_API_KEY': 'key-cwd-e2e',
-        });
-        final result = await runCli(
-          tempDir,
-          args: ['-v', 'deployments', '--version=1.0.0'],
-        );
-        expect(
-          result.stdout,
-          contains('Loaded config from ${p.join(tempDir.path, '.env')}'),
-        );
-        expect(result.stdout, contains('token: tok-cwd-e2e'));
-        expect(result.stdout, contains('api-key: key-cwd-e2e'));
-      },
-      timeout: const Timeout(Duration(seconds: 90)),
-    );
+    test('CLI loads credentials from .env in CWD', () async {
+      writeEnv(tempDir, {
+        'RAYGUN_TOKEN': 'tok-cwd-e2e',
+        'RAYGUN_API_KEY': 'key-cwd-e2e',
+      });
+      final result = await runCli(
+        tempDir,
+        args: ['-v', 'deployments', '--version=1.0.0'],
+      );
+      expect(
+        result.stdout,
+        contains('Loaded config from ${p.join(tempDir.path, '.env')}'),
+      );
+      expect(result.stdout, contains('token: tok-cwd-e2e'));
+      expect(result.stdout, contains('api-key: key-cwd-e2e'));
+    }, timeout: const Timeout(Duration(seconds: 90)));
 
-    test(
-      'CLI walks up parent directories to find .env',
-      () async {
-        writeEnv(tempDir, {
-          'RAYGUN_TOKEN': 'tok-parent',
-          'RAYGUN_API_KEY': 'key-parent',
-        });
-        final nested = Directory(p.join(tempDir.path, 'a', 'b'))
-          ..createSync(recursive: true);
-        // Pin the upward walk's stop boundary to tempDir via HOME.
-        final result = await runCli(
-          nested,
-          args: ['-v', 'deployments', '--version=1.0.0'],
-          env: {'HOME': tempDir.path},
-        );
-        expect(
-          result.stdout,
-          contains('Loaded config from ${p.join(tempDir.path, '.env')}'),
-        );
-        expect(result.stdout, contains('token: tok-parent'));
-        expect(result.stdout, contains('api-key: key-parent'));
-      },
-      timeout: const Timeout(Duration(seconds: 90)),
-    );
+    test('CLI walks up parent directories to find .env', () async {
+      writeEnv(tempDir, {
+        'RAYGUN_TOKEN': 'tok-parent',
+        'RAYGUN_API_KEY': 'key-parent',
+      });
+      final nested = Directory(p.join(tempDir.path, 'a', 'b'))
+        ..createSync(recursive: true);
+      // Pin the upward walk's stop boundary to tempDir via HOME.
+      final result = await runCli(
+        nested,
+        args: ['-v', 'deployments', '--version=1.0.0'],
+        env: {'HOME': tempDir.path},
+      );
+      expect(
+        result.stdout,
+        contains('Loaded config from ${p.join(tempDir.path, '.env')}'),
+      );
+      expect(result.stdout, contains('token: tok-parent'));
+      expect(result.stdout, contains('api-key: key-parent'));
+    }, timeout: const Timeout(Duration(seconds: 90)));
   });
 
   group('E2E: --config-file flag', () {
-    test(
-      'explicit --config-file=<path> is honored',
-      () async {
-        final altDir = Directory.systemTemp.createTempSync('raygun_cli_alt_');
-        try {
-          final altPath = p.join(altDir.path, 'custom.env');
-          File(altPath).writeAsStringSync(
-            'RAYGUN_TOKEN=tok-explicit\nRAYGUN_API_KEY=key-explicit\n',
-          );
-
-          // CWD .env exists with different values — must be ignored.
-          writeEnv(tempDir, {
-            'RAYGUN_TOKEN': 'tok-cwd-should-not-win',
-            'RAYGUN_API_KEY': 'key-cwd-should-not-win',
-          });
-
-          final result = await runCli(
-            tempDir,
-            args: [
-              '-v',
-              '--config-file=$altPath',
-              'deployments',
-              '--version=1.0.0',
-            ],
-          );
-          expect(result.stdout, contains('Loaded config from $altPath'));
-          expect(result.stdout, contains('token: tok-explicit'));
-          expect(result.stdout, contains('api-key: key-explicit'));
-          expect(result.stdout, isNot(contains('tok-cwd-should-not-win')));
-        } finally {
-          altDir.deleteSync(recursive: true);
-        }
-      },
-      timeout: const Timeout(Duration(seconds: 90)),
-    );
-
-    test(
-      'invalid --config-file path exits with code 2',
-      () async {
-        final result = await runCli(
-          tempDir,
-          args: [
-            '--config-file=/definitely/does/not/exist.env',
-            'deployments',
-            '--version=1.0.0',
-          ],
+    test('explicit --config-file=<path> is honored', () async {
+      final altDir = Directory.systemTemp.createTempSync('raygun_cli_alt_');
+      try {
+        final altPath = p.join(altDir.path, 'custom.env');
+        File(altPath).writeAsStringSync(
+          'RAYGUN_TOKEN=tok-explicit\nRAYGUN_API_KEY=key-explicit\n',
         );
-        expect(result.exitCode, 2);
-        expect(
-          result.stdout,
-          contains('Error: --config-file points to a missing file'),
-        );
-      },
-      timeout: const Timeout(Duration(seconds: 90)),
-    );
-  });
 
-  group('E2E: precedence', () {
-    test(
-      'CLI argument wins over both env var and .env file',
-      () async {
+        // CWD .env exists with different values — must be ignored.
         writeEnv(tempDir, {
-          'RAYGUN_TOKEN': 'tok-from-file',
-          'RAYGUN_API_KEY': 'key-from-file',
+          'RAYGUN_TOKEN': 'tok-cwd-should-not-win',
+          'RAYGUN_API_KEY': 'key-cwd-should-not-win',
         });
+
         final result = await runCli(
           tempDir,
           args: [
             '-v',
+            '--config-file=$altPath',
             'deployments',
             '--version=1.0.0',
-            '--token=tok-from-arg',
-            '--api-key=key-from-arg',
           ],
-          env: {
-            'RAYGUN_TOKEN': 'tok-from-env',
-            'RAYGUN_API_KEY': 'key-from-env',
-          },
         );
-        expect(result.stdout, contains('token: tok-from-arg'));
-        expect(result.stdout, contains('api-key: key-from-arg'));
-        expect(result.stdout, isNot(contains('tok-from-env')));
-        expect(result.stdout, isNot(contains('tok-from-file')));
-      },
-      timeout: const Timeout(Duration(seconds: 90)),
-    );
+        expect(result.stdout, contains('Loaded config from $altPath'));
+        expect(result.stdout, contains('token: tok-explicit'));
+        expect(result.stdout, contains('api-key: key-explicit'));
+        expect(result.stdout, isNot(contains('tok-cwd-should-not-win')));
+      } finally {
+        altDir.deleteSync(recursive: true);
+      }
+    }, timeout: const Timeout(Duration(seconds: 90)));
+
+    test('invalid --config-file path exits with code 2', () async {
+      final result = await runCli(
+        tempDir,
+        args: [
+          '--config-file=/definitely/does/not/exist.env',
+          'deployments',
+          '--version=1.0.0',
+        ],
+      );
+      expect(result.exitCode, 2);
+      expect(
+        result.stdout,
+        contains('Error: --config-file points to a missing file'),
+      );
+    }, timeout: const Timeout(Duration(seconds: 90)));
+  });
+
+  group('E2E: precedence', () {
+    test('CLI argument wins over both env var and .env file', () async {
+      writeEnv(tempDir, {
+        'RAYGUN_TOKEN': 'tok-from-file',
+        'RAYGUN_API_KEY': 'key-from-file',
+      });
+      final result = await runCli(
+        tempDir,
+        args: [
+          '-v',
+          'deployments',
+          '--version=1.0.0',
+          '--token=tok-from-arg',
+          '--api-key=key-from-arg',
+        ],
+        env: {'RAYGUN_TOKEN': 'tok-from-env', 'RAYGUN_API_KEY': 'key-from-env'},
+      );
+      expect(result.stdout, contains('token: tok-from-arg'));
+      expect(result.stdout, contains('api-key: key-from-arg'));
+      expect(result.stdout, isNot(contains('tok-from-env')));
+      expect(result.stdout, isNot(contains('tok-from-file')));
+    }, timeout: const Timeout(Duration(seconds: 90)));
 
     test(
       'environment variable wins over .env file when arg is absent',
@@ -206,37 +183,29 @@ void main() {
       timeout: const Timeout(Duration(seconds: 90)),
     );
 
-    test(
-      '.env file is used as the lowest-priority fallback',
-      () async {
-        writeEnv(tempDir, {
-          'RAYGUN_TOKEN': 'tok-only-in-file',
-          'RAYGUN_API_KEY': 'key-only-in-file',
-        });
-        final result = await runCli(
-          tempDir,
-          args: ['-v', 'deployments', '--version=1.0.0'],
-        );
-        expect(result.stdout, contains('token: tok-only-in-file'));
-        expect(result.stdout, contains('api-key: key-only-in-file'));
-      },
-      timeout: const Timeout(Duration(seconds: 90)),
-    );
+    test('.env file is used as the lowest-priority fallback', () async {
+      writeEnv(tempDir, {
+        'RAYGUN_TOKEN': 'tok-only-in-file',
+        'RAYGUN_API_KEY': 'key-only-in-file',
+      });
+      final result = await runCli(
+        tempDir,
+        args: ['-v', 'deployments', '--version=1.0.0'],
+      );
+      expect(result.stdout, contains('token: tok-only-in-file'));
+      expect(result.stdout, contains('api-key: key-only-in-file'));
+    }, timeout: const Timeout(Duration(seconds: 90)));
 
-    test(
-      'mixed: env supplies token, .env supplies api-key',
-      () async {
-        writeEnv(tempDir, {'RAYGUN_API_KEY': 'key-from-file'});
-        final result = await runCli(
-          tempDir,
-          args: ['-v', 'deployments', '--version=1.0.0'],
-          env: {'RAYGUN_TOKEN': 'tok-from-env'},
-        );
-        expect(result.stdout, contains('token: tok-from-env'));
-        expect(result.stdout, contains('api-key: key-from-file'));
-      },
-      timeout: const Timeout(Duration(seconds: 90)),
-    );
+    test('mixed: env supplies token, .env supplies api-key', () async {
+      writeEnv(tempDir, {'RAYGUN_API_KEY': 'key-from-file'});
+      final result = await runCli(
+        tempDir,
+        args: ['-v', 'deployments', '--version=1.0.0'],
+        env: {'RAYGUN_TOKEN': 'tok-from-env'},
+      );
+      expect(result.stdout, contains('token: tok-from-env'));
+      expect(result.stdout, contains('api-key: key-from-file'));
+    }, timeout: const Timeout(Duration(seconds: 90)));
   });
 
   group('E2E: missing config', () {
@@ -313,29 +282,22 @@ void main() {
       timeout: const Timeout(Duration(seconds: 90)),
     );
 
-    test(
-      'empty .env value falls through to env var',
-      () async {
-        // .env has the keys but blank; env vars supply real values.
-        // Verbose output should show the "Ignoring empty" notice and then
-        // resolve from the env var tier.
-        writeEnv(tempDir, {'RAYGUN_TOKEN': '', 'RAYGUN_API_KEY': ''});
-        final result = await runCli(
-          tempDir,
-          args: ['-v', 'deployments', '--version=1.0.0'],
-          env: {
-            'RAYGUN_TOKEN': 'tok-from-env',
-            'RAYGUN_API_KEY': 'key-from-env',
-          },
-        );
-        expect(result.stdout, contains('token: tok-from-env'));
-        expect(result.stdout, contains('api-key: key-from-env'));
-        expect(
-          result.stdout,
-          contains('[VERBOSE] Resolved token from environment variable'),
-        );
-      },
-      timeout: const Timeout(Duration(seconds: 90)),
-    );
+    test('empty .env value falls through to env var', () async {
+      // .env has the keys but blank; env vars supply real values.
+      // Verbose output should show the "Ignoring empty" notice and then
+      // resolve from the env var tier.
+      writeEnv(tempDir, {'RAYGUN_TOKEN': '', 'RAYGUN_API_KEY': ''});
+      final result = await runCli(
+        tempDir,
+        args: ['-v', 'deployments', '--version=1.0.0'],
+        env: {'RAYGUN_TOKEN': 'tok-from-env', 'RAYGUN_API_KEY': 'key-from-env'},
+      );
+      expect(result.stdout, contains('token: tok-from-env'));
+      expect(result.stdout, contains('api-key: key-from-env'));
+      expect(
+        result.stdout,
+        contains('[VERBOSE] Resolved token from environment variable'),
+      );
+    }, timeout: const Timeout(Duration(seconds: 90)));
   });
 }
