@@ -1,3 +1,10 @@
+## 2.0.2
+
+- ci: Update and pin the GitHub Actions checkout action to remove the Node.js 20 deprecation warning (#73)
+- chore(deps): bump test from 1.31.1 to 1.31.2 (#70)
+- chore(deps): bump build_runner from 2.15.0 to 2.16.0 (#72)
+- chore(deps): bump mockito from 5.7.0 to 5.8.1 and regenerate mocks (#71)
+
 ## 2.0.1
 
 - docs: Add dartdoc comments to the exported public command API to improve pub.dev documentation scoring.
