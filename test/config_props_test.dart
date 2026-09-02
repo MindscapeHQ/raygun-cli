@@ -215,38 +215,34 @@ void main() {
       },
     );
 
-    test(
-      'empty value at every tier exits with code 2',
-      () async {
-        // Empty .env value, empty env var, empty CLI arg — must surface the
-        // friendly "Missing" error, not propagate '' downstream. Spawned in
-        // a child process so the exit(2) doesn't kill the test runner.
-        File(
-          p.join(tempDir.path, ConfigFile.fileName),
-        ).writeAsStringSync('RAYGUN_TOKEN=\nRAYGUN_API_KEY=\n');
-        final result = await Process.run(
-          Platform.resolvedExecutable,
-          [
-            'run',
-            p.absolute('bin/raygun_cli.dart'),
-            'deployments',
-            '--version=1.0.0',
-            '--token=',
-            '--api-key=',
-          ],
-          workingDirectory: tempDir.path,
-          environment: const {'RAYGUN_TOKEN': '', 'RAYGUN_API_KEY': ''},
-          includeParentEnvironment: false,
-        );
-        expect(result.exitCode, 2);
-        expect(result.stdout, contains('Missing'));
-        expect(
-          result.stdout,
-          contains('Empty or whitespace-only values are treated as missing'),
-        );
-      },
-      timeout: const Timeout(Duration(seconds: 60)),
-    );
+    test('empty value at every tier exits with code 2', () async {
+      // Empty .env value, empty env var, empty CLI arg — must surface the
+      // friendly "Missing" error, not propagate '' downstream. Spawned in
+      // a child process so the exit(2) doesn't kill the test runner.
+      File(
+        p.join(tempDir.path, ConfigFile.fileName),
+      ).writeAsStringSync('RAYGUN_TOKEN=\nRAYGUN_API_KEY=\n');
+      final result = await Process.run(
+        Platform.resolvedExecutable,
+        [
+          'run',
+          p.absolute('bin/raygun_cli.dart'),
+          'deployments',
+          '--version=1.0.0',
+          '--token=',
+          '--api-key=',
+        ],
+        workingDirectory: tempDir.path,
+        environment: const {'RAYGUN_TOKEN': '', 'RAYGUN_API_KEY': ''},
+        includeParentEnvironment: false,
+      );
+      expect(result.exitCode, 2);
+      expect(result.stdout, contains('Missing'));
+      expect(
+        result.stdout,
+        contains('Empty or whitespace-only values are treated as missing'),
+      );
+    }, timeout: const Timeout(Duration(seconds: 60)));
 
     test('empty CLI arg falls through to env var', () {
       Environment.setInstance(
@@ -395,36 +391,32 @@ void main() {
   // New: failure mode — missing in all three sources
   // -----------------------------------------------------------------
   group('ConfigProp missing-in-all-sources failure', () {
-    test(
-      'exits with code 2 and prints helpful error',
-      () async {
-        // Use a child process to assert exit code, since exit(2) would kill
-        // the test runner. We invoke the real CLI with no arg, no env, no
-        // .env file present in the temp working directory.
-        final result = await Process.run(
-          Platform.resolvedExecutable,
-          [
-            'run',
-            p.absolute('bin/raygun_cli.dart'),
-            'deployments',
-            '--version=1.0.0',
-          ],
-          workingDirectory: tempDir.path,
-          // includeParentEnvironment: false + empty env map ensures NONE of the
-          // RAYGUN_* env vars are visible to the child process — forcing
-          // ConfigProp.load() to fall through every tier and exit(2).
-          environment: const {},
-          includeParentEnvironment: false,
-        );
-        expect(result.exitCode, 2);
-        expect(result.stdout, contains('Missing'));
-        expect(
-          result.stdout,
-          contains('.env config file'),
-          reason: 'error message should mention .env as a third option',
-        );
-      },
-      timeout: const Timeout(Duration(seconds: 60)),
-    );
+    test('exits with code 2 and prints helpful error', () async {
+      // Use a child process to assert exit code, since exit(2) would kill
+      // the test runner. We invoke the real CLI with no arg, no env, no
+      // .env file present in the temp working directory.
+      final result = await Process.run(
+        Platform.resolvedExecutable,
+        [
+          'run',
+          p.absolute('bin/raygun_cli.dart'),
+          'deployments',
+          '--version=1.0.0',
+        ],
+        workingDirectory: tempDir.path,
+        // includeParentEnvironment: false + empty env map ensures NONE of the
+        // RAYGUN_* env vars are visible to the child process — forcing
+        // ConfigProp.load() to fall through every tier and exit(2).
+        environment: const {},
+        includeParentEnvironment: false,
+      );
+      expect(result.exitCode, 2);
+      expect(result.stdout, contains('Missing'));
+      expect(
+        result.stdout,
+        contains('.env config file'),
+        reason: 'error message should mention .env as a third option',
+      );
+    }, timeout: const Timeout(Duration(seconds: 60)));
   });
 }
