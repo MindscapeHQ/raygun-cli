@@ -1,3 +1,8 @@
+## 2.0.3
+
+- chore(deps): bump build_runner from 2.16.0 to 2.16.1 (#77)
+- chore(deps): bump test from 1.31.2 to 1.32.0 (#78)
+
 ## 2.0.2
 
 - ci: Update and pin the GitHub Actions checkout action to remove the Node.js 20 deprecation warning (#73)
