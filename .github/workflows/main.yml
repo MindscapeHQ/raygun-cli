@@ -43,6 +43,9 @@ jobs:
       - name: Resolve minimum dependency versions
         run: dart pub downgrade
 
+      - name: Use a Dart 3.11-compatible test compiler client
+        run: dart pub upgrade frontend_server_client
+
       - name: Analyze project source
         run: dart analyze
 
