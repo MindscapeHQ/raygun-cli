@@ -13,12 +13,38 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
 
       - name: Install dependencies
         run: dart pub get --enforce-lockfile
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source
+        run: dart analyze
+
+      - name: Run tests
+        run: dart test
+
+      - name: Validate package publishing
+        run: dart pub publish --dry-run
+
+  minimum-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.11.0
+
+      - name: Resolve minimum dependency versions
+        run: dart pub downgrade
+
+      - name: Use a Dart 3.11-compatible test compiler client
+        run: dart pub upgrade frontend_server_client
 
       - name: Analyze project source
         run: dart analyze
