@@ -15,7 +15,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
 
       - name: Install dependencies
         run: dart pub get --enforce-lockfile
@@ -51,7 +51,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
 
       - name: Install dependencies
         run: dart pub get --enforce-lockfile
@@ -87,7 +87,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
 
       - name: Install dependencies
         run: dart pub get --enforce-lockfile
