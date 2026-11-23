@@ -1,3 +1,11 @@
+## 2.0.4
+
+- chore(deps): update build_runner to 2.16.2 and test to 1.33.0 (#81, #82)
+- chore(deps): update async to 2.13.1, source_span to 1.10.2, and crypto to 3.0.8 (#84)
+- ci: strengthen dependency review, vulnerability scanning, and minimum-version checks (#80)
+- ci: update and pin GitHub Actions and add weekly Dependabot coverage (#83)
+- Source builds using the committed lockfile require Dart 3.13 or newer. The package SDK constraint remains `^3.11.0`.
+
 ## 2.0.3
 
 - chore(deps): bump build_runner from 2.16.0 to 2.16.1 (#77)
